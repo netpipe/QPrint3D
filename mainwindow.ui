@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1141</width>
-    <height>651</height>
+    <width>950</width>
+    <height>623</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -16,13 +16,16 @@
   <widget class="QWidget" name="centralWidget">
    <layout class="QGridLayout" name="gridLayout_4">
     <item row="0" column="0">
-     <widget class="QTabWidget" name="tabWidget">
+     <widget class="QTabWidget" name="printTabs">
+      <property name="tabShape">
+       <enum>QTabWidget::Triangular</enum>
+      </property>
       <property name="currentIndex">
        <number>0</number>
       </property>
       <widget class="QWidget" name="tab">
        <attribute name="title">
-        <string>Tab 1</string>
+        <string>Control</string>
        </attribute>
        <widget class="QGroupBox" name="groupBox_3">
         <property name="geometry">
@@ -267,7 +270,20 @@
           </rect>
          </property>
          <property name="text">
-          <string>z+1</string>
+          <string>z-1</string>
+         </property>
+        </widget>
+        <widget class="QPushButton" name="emstopbtn">
+         <property name="geometry">
+          <rect>
+           <x>210</x>
+           <y>190</y>
+           <width>111</width>
+           <height>27</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>EMStop</string>
          </property>
         </widget>
        </widget>
@@ -307,7 +323,7 @@
          <rect>
           <x>450</x>
           <y>240</y>
-          <width>171</width>
+          <width>166</width>
           <height>106</height>
          </rect>
         </property>
@@ -319,7 +335,7 @@
           <widget class="QLineEdit" name="lineEdit"/>
          </item>
          <item row="1" column="0">
-          <widget class="QPushButton" name="pushButton">
+          <widget class="QPushButton" name="pushButton_4">
            <property name="text">
             <string>Send</string>
            </property>
@@ -330,9 +346,9 @@
        <widget class="QListView" name="listView">
         <property name="geometry">
          <rect>
-          <x>9</x>
-          <y>257</y>
-          <width>421</width>
+          <x>630</x>
+          <y>260</y>
+          <width>271</width>
           <height>81</height>
          </rect>
         </property>
@@ -392,8 +408,8 @@
        <widget class="QPushButton" name="pushButton_22">
         <property name="geometry">
          <rect>
-          <x>240</x>
-          <y>160</y>
+          <x>250</x>
+          <y>150</y>
           <width>91</width>
           <height>27</height>
          </rect>
@@ -402,89 +418,188 @@
          <string>Test</string>
         </property>
        </widget>
+       <widget class="QGroupBox" name="groupBox_5">
+        <property name="geometry">
+         <rect>
+          <x>20</x>
+          <y>350</y>
+          <width>937</width>
+          <height>139</height>
+         </rect>
+        </property>
+        <property name="title">
+         <string>Position</string>
+        </property>
+        <layout class="QGridLayout" name="gridLayout_3">
+         <item row="3" column="6">
+          <widget class="QLineEdit" name="setbedtemp">
+           <property name="text">
+            <string>0</string>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="6">
+          <widget class="QLineEdit" name="settiptemp">
+           <property name="text">
+            <string>0</string>
+           </property>
+          </widget>
+         </item>
+         <item row="3" column="0">
+          <widget class="QLabel" name="label_7">
+           <property name="text">
+            <string>Bed Temperature</string>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="0">
+          <widget class="QLabel" name="label_6">
+           <property name="text">
+            <string>Tip/Hotend Temperature</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="5">
+          <widget class="QLabel" name="label_5">
+           <property name="text">
+            <string>Z</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="3">
+          <widget class="QLineEdit" name="ycoord">
+           <property name="text">
+            <string>0</string>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="3">
+          <widget class="QLabel" name="ctiptemp">
+           <property name="text">
+            <string>current#</string>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="1">
+          <widget class="QLabel" name="label_8">
+           <property name="text">
+            <string>Current:</string>
+           </property>
+          </widget>
+         </item>
+         <item row="3" column="3">
+          <widget class="QLabel" name="cbedtemp">
+           <property name="text">
+            <string>current#</string>
+           </property>
+          </widget>
+         </item>
+         <item row="3" column="1">
+          <widget class="QLabel" name="label_9">
+           <property name="text">
+            <string>Current:</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="2">
+          <widget class="QLabel" name="label_4">
+           <property name="text">
+            <string>Y</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="6">
+          <widget class="QLineEdit" name="zcoord">
+           <property name="text">
+            <string>0</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="1">
+          <widget class="QLineEdit" name="xcoord">
+           <property name="text">
+            <string>0</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="0">
+          <widget class="QLabel" name="label_3">
+           <property name="text">
+            <string>X</string>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="4">
+          <widget class="QPushButton" name="setTipbutton">
+           <property name="text">
+            <string>SetTip</string>
+           </property>
+          </widget>
+         </item>
+         <item row="3" column="4">
+          <widget class="QPushButton" name="setBedbtn">
+           <property name="text">
+            <string>SetBed</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </widget>
+      <widget class="QWidget" name="tab_2">
+       <attribute name="title">
+        <string>Extra Commands</string>
+       </attribute>
        <widget class="QGroupBox" name="groupBox_4">
         <property name="geometry">
          <rect>
-          <x>640</x>
-          <y>250</y>
-          <width>311</width>
-          <height>181</height>
+          <x>10</x>
+          <y>20</y>
+          <width>421</width>
+          <height>231</height>
          </rect>
         </property>
         <property name="title">
          <string>Extra Gcode</string>
         </property>
-        <widget class="QPushButton" name="pushButton_23">
-         <property name="geometry">
-          <rect>
-           <x>20</x>
-           <y>40</y>
-           <width>121</width>
-           <height>27</height>
-          </rect>
-         </property>
-         <property name="text">
-          <string>Save EEprom</string>
-         </property>
-        </widget>
-        <widget class="QPushButton" name="pushButton_24">
-         <property name="geometry">
-          <rect>
-           <x>20</x>
-           <y>70</y>
-           <width>141</width>
-           <height>27</height>
-          </rect>
-         </property>
-         <property name="text">
-          <string>Turn Extruder Off</string>
-         </property>
-        </widget>
-        <widget class="QPushButton" name="pushButton_25">
-         <property name="geometry">
-          <rect>
-           <x>170</x>
-           <y>40</y>
-           <width>131</width>
-           <height>27</height>
-          </rect>
-         </property>
-         <property name="text">
-          <string>Turn Motors Off</string>
-         </property>
-        </widget>
-        <widget class="QPushButton" name="pushButton_26">
-         <property name="geometry">
-          <rect>
-           <x>20</x>
-           <y>100</y>
-           <width>141</width>
-           <height>27</height>
-          </rect>
-         </property>
-         <property name="text">
-          <string>Turn Extruder Off</string>
-         </property>
-        </widget>
-        <widget class="QPushButton" name="pushButton_27">
-         <property name="geometry">
-          <rect>
-           <x>20</x>
-           <y>130</y>
-           <width>141</width>
-           <height>27</height>
-          </rect>
-         </property>
-         <property name="text">
-          <string>Turn Extruder Off</string>
-         </property>
-        </widget>
+        <layout class="QGridLayout" name="gridLayout_5">
+         <item row="0" column="0">
+          <widget class="QPushButton" name="pushButton_23">
+           <property name="text">
+            <string>Save EEprom</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="1">
+          <widget class="QPushButton" name="pushButton_25">
+           <property name="text">
+            <string>Turn Motors Off</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="0">
+          <widget class="QPushButton" name="pushButton_24">
+           <property name="text">
+            <string>Turn Extruder Off</string>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="0">
+          <widget class="QPushButton" name="pushButton_26">
+           <property name="text">
+            <string>Turn Extruder Off</string>
+           </property>
+          </widget>
+         </item>
+         <item row="3" column="0">
+          <widget class="QPushButton" name="pushButton_27">
+           <property name="text">
+            <string>Turn Extruder Off</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
        </widget>
-      </widget>
-      <widget class="QWidget" name="tab_2">
-       <attribute name="title">
-        <string>Tab 2</string>
-       </attribute>
       </widget>
      </widget>
     </item>
@@ -495,7 +610,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1141</width>
+     <width>950</width>
      <height>24</height>
     </rect>
    </property>
@@ -513,18 +628,18 @@
     <enum>TopToolBarArea</enum>
    </attribute>
    <attribute name="toolBarBreak">
-    <bool>true</bool>
+    <bool>false</bool>
    </attribute>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <action name="actionExit">
    <property name="text">
-    <string>Exit</string>
+    <string>&amp;Exit</string>
    </property>
   </action>
   <action name="actionConnect">
    <property name="text">
-    <string>Connect</string>
+    <string>&amp;Connect</string>
    </property>
   </action>
  </widget>

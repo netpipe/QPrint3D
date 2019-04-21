@@ -38,6 +38,12 @@ private slots:
 
     void on_homeallbtn_clicked();
 
+    void on_y10btn_clicked();
+
+    void on_y1btn_clicked();
+
+    void on_emstopbtn_clicked();
+
 private:
 
     Ui::MainWindow *ui;

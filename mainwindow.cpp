@@ -125,9 +125,9 @@ void MainWindow::serialReceived()
 void MainWindow::on_pushButton_2_clicked()
 {
 
-    serial->setPortName(ui->portBox->currentText());
+ //   serial->setPortName(ui->portBox->currentText());
       connect(serial,SIGNAL(readyRead()),this,SLOT(serialReceived()));
-    //    serial->setPortName(QString('/dev/ttyACM0'));
+   serial->setPortName(QString('/dev/ttyACM0'));
     serial->setBaudRate(115200);
     serial->setDataBits(QSerialPort::Data8);
     serial->setParity(QSerialPort::NoParity);
@@ -155,3 +155,21 @@ void MainWindow::on_homeallbtn_clicked()
 {
     sendCommand("G28;");
 }
+
+void MainWindow::on_y10btn_clicked()
+{
+     sendCommand("G0 Y10;");
+}
+
+//M70 P200 Message
+void MainWindow::on_y1btn_clicked()
+{
+        sendCommand("G0 Y1;");
+}
+
+void MainWindow::on_emstopbtn_clicked()
+{
+     sendCommand("M117;");
+}
+
+
