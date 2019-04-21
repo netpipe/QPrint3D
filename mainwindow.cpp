@@ -179,3 +179,8 @@ void MainWindow::on_emstopbtn_clicked()
 }
 
 
+
+void MainWindow::on_pushButton_4_clicked()
+{
+
+}
