@@ -21,7 +21,7 @@
        <enum>QTabWidget::Triangular</enum>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="tab">
        <attribute name="title">
@@ -544,6 +544,148 @@
           </widget>
          </item>
         </layout>
+       </widget>
+       <widget class="QPushButton" name="pausebtn">
+        <property name="geometry">
+         <rect>
+          <x>40</x>
+          <y>210</y>
+          <width>111</width>
+          <height>27</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Pause M226</string>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="pauseSDbtn">
+        <property name="geometry">
+         <rect>
+          <x>180</x>
+          <y>210</y>
+          <width>121</width>
+          <height>27</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>PauseSD M24</string>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="pauseSDbtn_2">
+        <property name="geometry">
+         <rect>
+          <x>180</x>
+          <y>240</y>
+          <width>121</width>
+          <height>27</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>ResumeSD M25</string>
+        </property>
+       </widget>
+      </widget>
+      <widget class="QWidget" name="tab_3">
+       <attribute name="title">
+        <string>GCode</string>
+       </attribute>
+       <widget class="QListView" name="listView_2">
+        <property name="geometry">
+         <rect>
+          <x>20</x>
+          <y>40</y>
+          <width>871</width>
+          <height>71</height>
+         </rect>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="pushButton_3">
+        <property name="geometry">
+         <rect>
+          <x>20</x>
+          <y>10</y>
+          <width>91</width>
+          <height>27</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Open</string>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="pushButton_4">
+        <property name="geometry">
+         <rect>
+          <x>120</x>
+          <y>10</y>
+          <width>91</width>
+          <height>27</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Save</string>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="uploadsdbtn">
+        <property name="geometry">
+         <rect>
+          <x>220</x>
+          <y>10</y>
+          <width>91</width>
+          <height>27</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>UploadSD</string>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="uploadprintbtn">
+        <property name="geometry">
+         <rect>
+          <x>320</x>
+          <y>10</y>
+          <width>101</width>
+          <height>27</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Upload/Print</string>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="pushButton_11">
+        <property name="geometry">
+         <rect>
+          <x>430</x>
+          <y>10</y>
+          <width>101</width>
+          <height>27</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Print</string>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="opengcodebtn">
+        <property name="geometry">
+         <rect>
+          <x>30</x>
+          <y>180</y>
+          <width>91</width>
+          <height>27</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Open</string>
+        </property>
+       </widget>
+       <widget class="QTextEdit" name="textBrowser">
+        <property name="geometry">
+         <rect>
+          <x>20</x>
+          <y>210</y>
+          <width>881</width>
+          <height>261</height>
+         </rect>
+        </property>
        </widget>
       </widget>
       <widget class="QWidget" name="tab_2">

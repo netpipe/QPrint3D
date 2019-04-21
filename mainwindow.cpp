@@ -11,15 +11,31 @@
 #include <QTextStream>
 #include <QDebug>
 
+#include <QInputDialog>
+
+
 // a backup plan for talking to printer on linux would be to use the echo "G28" >> /dev/ttyACM0
 // code used for this.
 //https://stackoverflow.com/questions/51209822/qtserialport-not-writing-to-serial-port
 //http://www.howtobuildsoftware.com/index.php/how-do/cBtm/c-qt-serial-port-writing-qt-serial-port-not-working
 
+
+
+
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
+
+
+
+
+
+
+
+
+
+
 
     serial = new QSerialPort(this);
 //! [1]
@@ -183,4 +199,81 @@ void MainWindow::on_emstopbtn_clicked()
 void MainWindow::on_pushButton_4_clicked()
 {
 
+}
+
+void MainWindow::on_pushButton_3_clicked()
+{
+
+
+
+//https://stackoverflow.com/questions/28408542/how-to-populate-qt-listview-with-content-from-a-text-file
+    QStringList *allLines = new QStringList(); //Your list for lines from the file.
+     allLines->clear();
+
+     QStringListModel *linesModel = new QStringListModel(*allLines, NULL); //Your model to set to the view.
+
+     QFile file("/home/netpipe/text.gcode");
+     if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
+         return;
+
+     while (!file.atEnd()) {
+         QByteArray line = file.readLine(); //Lines are read as QByteArray.
+         const char *line_c = line.data(); //convert to const char*
+         QString line_str = QString(QLatin1String(line_c)); //And finally convert to QString
+         allLines->append(line_str); //Add to the list
+     }
+
+     linesModel->setStringList(*allLines); //Set your model's list your stringlist
+     ui->listView_2->setModel(linesModel); //set model of your listView linesModel. You need to use your listView's name, which might be ui->listView.
+
+
+
+    ui->listView_2->
+            setEditTriggers(QAbstractItemView::AnyKeyPressed |
+                            QAbstractItemView::DoubleClicked);
+
+}
+
+void MainWindow::on_opengcodebtn_clicked()
+{
+    QFile file("/home/netpipe/text.gcode");
+    file.open(QIODevice::ReadOnly);
+    QTextStream stream(&file);
+    QString content = stream.readAll();
+    file.close();
+    ui->textBrowser->append(content);
+
+
+    QString text = ui->textBrowser->toPlainText();
+    QTextStream * stream2 = new QTextStream(&text , QIODevice::ReadOnly);
+  //  QVector<QString > lines;
+    while (!stream2->atEnd())
+    {
+        lines << stream2->readLine();
+    }
+
+QString text3 = QInputDialog::getText(this,"Title","text");
+}
+
+void MainWindow::on_uploadsdbtn_clicked()
+{
+      sendCommand("M21;"); // get sdcard ready
+      sendCommand("M28 filename.txt;"); //write to file
+
+      // send code here
+      sendCommand("M29;"); //stop writing
+
+}
+
+void MainWindow::on_uploadprintbtn_clicked()
+{
+    //pick filename
+
+    sendCommand("M21;"); // get sdcard ready
+    sendCommand("M28 filename.txt;"); //write to file
+
+    // send code here
+    sendCommand("M29;"); //stop writing
+    sendCommand("M23 filename.txt;"); //
+    sendCommand("M24;"); //start printing
 }

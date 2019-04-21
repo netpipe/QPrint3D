@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <QtSerialPort/QSerialPort>
+#include <QStringListModel>
 
 namespace Ui {
 class MainWindow;
@@ -46,10 +47,20 @@ private slots:
 
     void on_pushButton_4_clicked();
 
+    void on_pushButton_3_clicked();
+
+    void on_opengcodebtn_clicked();
+
+    void on_uploadsdbtn_clicked();
+
+    void on_uploadprintbtn_clicked();
+
 private:
 
     Ui::MainWindow *ui;
         QSerialPort *serial;
+         QStringListModel *model;
+             QVector<QString > lines;
 };
 
 #endif // MAINWINDOW_H
