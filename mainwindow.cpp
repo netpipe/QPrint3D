@@ -9,6 +9,7 @@
 #include <QPixmap>
 #include <QFile>
 #include <QTextStream>
+#include <QDebug>
 
 // a backup plan for talking to printer on linux would be to use the echo "G28" >> /dev/ttyACM0
 // code used for this.
@@ -118,16 +119,21 @@ void MainWindow::serialReceived()
     QByteArray output;
     output = serial->readAll();
     ui->label->setText("output");
+    qInfo() << output;
+     //qInfo("testing");
+
 }
+
+
 
 
 
 void MainWindow::on_pushButton_2_clicked()
 {
 
- //   serial->setPortName(ui->portBox->currentText());
+    serial->setPortName(ui->portBox->currentText());
       connect(serial,SIGNAL(readyRead()),this,SLOT(serialReceived()));
-   serial->setPortName(QString('/dev/ttyACM0'));
+  // serial->setPortName(QString('/dev/ttyACM0'));
     serial->setBaudRate(115200);
     serial->setDataBits(QSerialPort::Data8);
     serial->setParity(QSerialPort::NoParity);
