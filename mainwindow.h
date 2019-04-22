@@ -28,7 +28,7 @@ private slots:
    // void openSerialPort();
     void closeSerialPort();
     void writeData(const QByteArray &data);
-    void readData();
+    QString readData();
 
     void on_pushButton_2_clicked();
     void serialReceived();
@@ -55,12 +55,20 @@ private slots:
 
     void on_uploadprintbtn_clicked();
 
+    void on_pushButton_11_clicked();
+
+    void on_pauseSDbtn_2_clicked();
+    
+    void on_pushButton_20_clicked();
+    
+    void on_printbtn_clicked();
+
 private:
 
     Ui::MainWindow *ui;
-        QSerialPort *serial;
-         QStringListModel *model;
-             QVector<QString > lines;
+    QSerialPort *serial;
+    QStringListModel *model;
+    QVector<QString > lines;
 };
 
 #endif // MAINWINDOW_H

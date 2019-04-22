@@ -21,7 +21,7 @@
        <enum>QTabWidget::Triangular</enum>
       </property>
       <property name="currentIndex">
-       <number>1</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="tab">
        <attribute name="title">
@@ -343,11 +343,11 @@
          </item>
         </layout>
        </widget>
-       <widget class="QListView" name="listView">
+       <widget class="QListView" name="consolelist">
         <property name="geometry">
          <rect>
-          <x>630</x>
-          <y>260</y>
+          <x>-30</x>
+          <y>250</y>
           <width>271</width>
           <height>81</height>
          </rect>
@@ -473,24 +473,10 @@
            </property>
           </widget>
          </item>
-         <item row="2" column="3">
-          <widget class="QLabel" name="ctiptemp">
-           <property name="text">
-            <string>current#</string>
-           </property>
-          </widget>
-         </item>
          <item row="2" column="1">
           <widget class="QLabel" name="label_8">
            <property name="text">
             <string>Current:</string>
-           </property>
-          </widget>
-         </item>
-         <item row="3" column="3">
-          <widget class="QLabel" name="cbedtemp">
-           <property name="text">
-            <string>current#</string>
            </property>
           </widget>
          </item>
@@ -543,6 +529,20 @@
            </property>
           </widget>
          </item>
+         <item row="2" column="3">
+          <widget class="QSlider" name="tiptempslide">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+          </widget>
+         </item>
+         <item row="3" column="3">
+          <widget class="QSlider" name="bedtempslide">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+          </widget>
+         </item>
         </layout>
        </widget>
        <widget class="QPushButton" name="pausebtn">
@@ -582,6 +582,16 @@
         </property>
         <property name="text">
          <string>ResumeSD M25</string>
+        </property>
+       </widget>
+       <widget class="QTextEdit" name="console">
+        <property name="geometry">
+         <rect>
+          <x>620</x>
+          <y>260</y>
+          <width>291</width>
+          <height>91</height>
+         </rect>
         </property>
        </widget>
       </widget>
@@ -651,7 +661,7 @@
          <string>Upload/Print</string>
         </property>
        </widget>
-       <widget class="QPushButton" name="pushButton_11">
+       <widget class="QPushButton" name="printbtn">
         <property name="geometry">
          <rect>
           <x>430</x>

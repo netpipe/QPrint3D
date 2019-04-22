@@ -124,19 +124,28 @@ void MainWindow::writeData(const QByteArray &data)
 //! [6]
 
 //! [7]
-void MainWindow::readData()
+QString MainWindow::readData()
 {
     QByteArray data = serial->readAll();
+
+    //QString data = serial->readAll();
     //console->putData(data);
+    ui->console->append(data);
+
+//    QString data = ui->data->toPlainText();
+// QStringList strList = data.split(" ");
+
+   // return data.toStdString();
 }
 
 void MainWindow::serialReceived()
 {
     QByteArray output;
     output = serial->readAll();
-    ui->label->setText("output");
-    qInfo() << output;
+    //ui->label->setText("output");
+   // qInfo() << output;
      //qInfo("testing");
+     ui->console->append(output);
 
 }
 
@@ -161,6 +170,8 @@ void MainWindow::on_pushButton_2_clicked()
         ui->label->setText("Error: Failed to connect");
     }
 
+
+    //check if printer in ascii mode by lookikng for checksum error ?
 }
 
 void MainWindow::on_pushButton_16_clicked()
@@ -276,4 +287,46 @@ void MainWindow::on_uploadprintbtn_clicked()
     sendCommand("M29;"); //stop writing
     sendCommand("M23 filename.txt;"); //
     sendCommand("M24;"); //start printing
+}
+
+void MainWindow::on_pauseSDbtn_2_clicked()
+{
+    sendCommand("M25;");
+}
+
+
+void MainWindow::on_printbtn_clicked()
+{
+    //write gcode buffer if it checks out
+
+    int buffercount=10;
+    int count=0;
+//if gx == received position
+   //read file if gcodeedit is empty
+
+    int lcount=lines.count();
+    int icount=0;
+   while (lcount >= icount){ // loop whole buffer
+       //update progress bar / tip position
+
+       //wait for receive position
+        //mark receivedm114 reset
+     //  QString position = readData();
+
+       //parse position for validm114
+        int validm114=0;
+
+       if (validm114) {
+           for (int i=1;10,i++;){
+           //QString currentline = lines[1].toStdString();
+                   lines.pop_front();
+
+        //send 10 lines
+       //  sendCommand(currentline);
+        }
+        sendCommand("M114;");
+
+       }
+}
+
 }
