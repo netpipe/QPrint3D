@@ -9,7 +9,6 @@
 #include <QPixmap>
 #include <QFile>
 #include <QTextStream>
-#include <QDebug>
 
 #include <QInputDialog>
 #include <QFileDialog>
@@ -49,13 +48,13 @@ MainWindow::MainWindow(QWidget *parent) :
 //! [2]
    // connect(serial, SIGNAL(readyRead()), this, SLOT(readData()));
 //! [2]
-    //connect(console, SIGNAL(getData(QByteArray)), this, SLOT(writeData(QByteArray)));
-
-
-
+    //connect(console, SIGNAL(getData(QByteArray)), this, SLOT(writeData(QByteArray)))
 
 
     ui->setupUi(this);
+
+    ui->emstopbtn->setStyleSheet("background-color: red");
+
 }
 
 void MainWindow::closeSerialPort()
@@ -110,9 +109,10 @@ void MainWindow::sendCommand(QString commandstr)
         msgBox("not connected");
     }
 
+
 }
 
-void MainWindow::on_pushButton_clicked()
+void MainWindow::on_sendbtn_clicked()
 {
    // QString command = "G28\n";
    // ui->lineEdit->text();
@@ -195,7 +195,7 @@ void MainWindow::on_connectionbtn_clicked()
         if (serial->isOpen() && serial->isWritable())
        {
             ui->connectionbtn->setText("Disconnect");
-
+            ui->emstopbtn->setStyleSheet("background-color: red");
         }
     }else{
        // ui->label->setText("closing port");
@@ -203,6 +203,7 @@ void MainWindow::on_connectionbtn_clicked()
         if (!serial->isOpen())
         {
             ui->connectionbtn->setText("Connect");
+             ui->emstopbtn->setStyleSheet("background-color: rgb(155,255,0);");
         }
 
     }
@@ -378,3 +379,30 @@ void MainWindow::on_console_textChanged()
 {
 
 }
+
+void MainWindow::on_tiptempslide_actionTriggered(int action)
+{
+int maxtiptemp=230; // if temp higer do software drop
+int maxbedtemp=60;
+
+    ui->label->setText("tempchange");
+    ui->console->append("test");
+    qInfo() << ui->tiptempslide->value();
+}
+
+void MainWindow::on_tiptempslide_sliderReleased()
+{
+    sendCommand("M114;");
+}
+
+void MainWindow::on_bedtempslide_sliderReleased()
+{
+    QString text = QString(ui->bedtempslide->value());
+    ui->setbedinput->setText( text );
+}
+
+void MainWindow::on_lineEdit_returnPressed()
+{
+    on_sendbtn_clicked();
+}
+

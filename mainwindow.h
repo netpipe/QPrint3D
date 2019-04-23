@@ -65,6 +65,16 @@ private slots:
 
     void on_console_textChanged();
 
+    void on_tiptempslide_actionTriggered(int action);
+
+    void on_tiptempslide_sliderReleased();
+
+    void on_bedtempslide_sliderReleased();
+
+    void on_lineEdit_returnPressed();
+
+    void on_sendbtn_clicked();
+
 private:
 
     Ui::MainWindow *ui;
