@@ -21,6 +21,7 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
     void sendCommand(QString);
+    void msgBox(QString);
 
 private slots:
     void on_pushButton_clicked();
@@ -30,7 +31,6 @@ private slots:
     void writeData(const QByteArray &data);
     QString readData();
 
-    void on_pushButton_2_clicked();
     void serialReceived();
 
     void on_pushButton_16_clicked();
@@ -55,13 +55,15 @@ private slots:
 
     void on_uploadprintbtn_clicked();
 
-    void on_pushButton_11_clicked();
-
     void on_pauseSDbtn_2_clicked();
     
-    void on_pushButton_20_clicked();
-    
     void on_printbtn_clicked();
+
+    void on_printbtn_2_clicked();
+
+    void on_connectionbtn_clicked();
+
+    void on_console_textChanged();
 
 private:
 

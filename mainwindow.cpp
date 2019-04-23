@@ -12,6 +12,7 @@
 #include <QDebug>
 
 #include <QInputDialog>
+#include <QFileDialog>
 
 
 // a backup plan for talking to printer on linux would be to use the echo "G28" >> /dev/ttyACM0
@@ -81,6 +82,17 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+void MainWindow::msgBox(QString message){
+
+    QMessageBox Msgbox;
+    Msgbox.setText(message);
+    Msgbox.exec();
+
+ //    QMessageBox::critical(this, tr("Critical Error"), serial->errorString());
+
+}
+
+
 void MainWindow::sendCommand(QString commandstr)
 {
     QString command = commandstr + "\n";
@@ -93,6 +105,9 @@ void MainWindow::sendCommand(QString commandstr)
    // serial->write("G28;\n");
         serial->write(x);
        ui->label->setText("sent");
+    }
+    else {
+        msgBox("not connected");
     }
 
 }
@@ -131,9 +146,15 @@ QString MainWindow::readData()
     //QString data = serial->readAll();
     //console->putData(data);
     ui->console->append(data);
+    QString datas = data;
 
+  //  int x = QString::compare(str1, str2, Qt::CaseInsensitive);  // if strings are equal x should return 0
 //    QString data = ui->data->toPlainText();
-// QStringList strList = data.split(" ");
+
+    if (datas.at(0)=="X"){
+    //QStringList strList = data.split(" ");
+         ui->label->setText("Got Position");
+    }
 
    // return data.toStdString();
 }
@@ -151,26 +172,40 @@ void MainWindow::serialReceived()
 
 
 
-
-
-void MainWindow::on_pushButton_2_clicked()
+void MainWindow::on_connectionbtn_clicked()
 {
+    QString btnstatus = ui->connectionbtn->text();
+    ui->label->setText(btnstatus);
+    //if (btnstatus.toStdString().c_str() == "Connect"){
+    if (btnstatus.compare("Connect")==0){
+        serial->setPortName(ui->portBox->currentText());
+          connect(serial,SIGNAL(readyRead()),this,SLOT(serialReceived()));
+      // serial->setPortName(QString('/dev/ttyACM0'));
+        serial->setBaudRate(115200);
+        serial->setDataBits(QSerialPort::Data8);
+        serial->setParity(QSerialPort::NoParity);
+        serial->setStopBits(QSerialPort::OneStop);;
+        serial->setFlowControl(QSerialPort::NoFlowControl);
+        if (serial->open(QIODevice::ReadWrite)) {
+           ui->label->setText("Connected to Printer!!");
+        } else {
+            ui->label->setText("Error: Failed to connect");
+        }
 
-    serial->setPortName(ui->portBox->currentText());
-      connect(serial,SIGNAL(readyRead()),this,SLOT(serialReceived()));
-  // serial->setPortName(QString('/dev/ttyACM0'));
-    serial->setBaudRate(115200);
-    serial->setDataBits(QSerialPort::Data8);
-    serial->setParity(QSerialPort::NoParity);
-    serial->setStopBits(QSerialPort::OneStop);;
-    serial->setFlowControl(QSerialPort::NoFlowControl);
-    if (serial->open(QIODevice::ReadWrite)) {
-       ui->label->setText("Connected to Printer!!");
-    } else {
-        ui->label->setText("Error: Failed to connect");
+        if (serial->isOpen() && serial->isWritable())
+       {
+            ui->connectionbtn->setText("Disconnect");
+
+        }
+    }else{
+       // ui->label->setText("closing port");
+        closeSerialPort();
+        if (!serial->isOpen())
+        {
+            ui->connectionbtn->setText("Connect");
+        }
+
     }
-
-
     //check if printer in ascii mode by lookikng for checksum error ?
 }
 
@@ -279,6 +314,9 @@ void MainWindow::on_uploadsdbtn_clicked()
 void MainWindow::on_uploadprintbtn_clicked()
 {
     //pick filename
+    QString fileName = QFileDialog::getOpenFileName(this,
+         tr("Open GCode"), "/home", tr("GCode Files (*.gcode)"));
+   // ui->fileName->setText(fileName);
 
     sendCommand("M21;"); // get sdcard ready
     sendCommand("M28 filename.txt;"); //write to file
@@ -328,5 +366,15 @@ void MainWindow::on_printbtn_clicked()
 
        }
 }
+
+}
+
+void MainWindow::on_printbtn_2_clicked()
+{
+    on_printbtn_clicked();
+}
+
+void MainWindow::on_console_textChanged()
+{
 
 }
