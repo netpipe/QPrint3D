@@ -55,6 +55,15 @@ MainWindow::MainWindow(QWidget *parent) :
 
     ui->emstopbtn->setStyleSheet("background-color: red");
 
+    timer = new QTimer(this);
+
+    // setup signal and slot
+    connect(timer, SIGNAL(timeout()),
+          this, SLOT(on_timedevent()));
+
+    // msec
+    timer->start(1000);
+
 }
 
 void MainWindow::closeSerialPort()
@@ -195,7 +204,7 @@ void MainWindow::on_connectionbtn_clicked()
         if (serial->isOpen() && serial->isWritable())
        {
             ui->connectionbtn->setText("Disconnect");
-            ui->emstopbtn->setStyleSheet("background-color: red");
+            ui->connectionbtn->setStyleSheet("background-color: red");
         }
     }else{
        // ui->label->setText("closing port");
@@ -203,7 +212,7 @@ void MainWindow::on_connectionbtn_clicked()
         if (!serial->isOpen())
         {
             ui->connectionbtn->setText("Connect");
-             ui->emstopbtn->setStyleSheet("background-color: rgb(155,255,0);");
+             ui->connectionbtn->setStyleSheet("background-color: rgb(155,255,0);");
         }
 
     }
@@ -227,13 +236,21 @@ void MainWindow::on_homeallbtn_clicked()
 
 void MainWindow::on_y10btn_clicked()
 {
-     sendCommand("G0 Y10;");
+    float currentpos = ui->ycoord->text().toFloat();
+    //QString b;
+   // b.setNum(ui->ycoord->text());
+    float pos=currentpos+10;
+   // QString yposstr = QString::number(ypos);
+        sendCommand("G0 Y" + QString::number(pos) + ";");
 }
 
 //M70 P200 Message
 void MainWindow::on_y1btn_clicked()
 {
-        sendCommand("G0 Y1;");
+    float currentpos = ui->ycoord->text().toFloat();
+    float pos=currentpos+1;
+   // QString yposstr = QString::number(ypos);
+        sendCommand("G0 Y" + QString::number(pos) + ";");
 }
 
 void MainWindow::on_emstopbtn_clicked()
@@ -385,9 +402,9 @@ void MainWindow::on_tiptempslide_actionTriggered(int action)
 int maxtiptemp=230; // if temp higer do software drop
 int maxbedtemp=60;
 
-    ui->label->setText("tempchange");
-    ui->console->append("test");
-    qInfo() << ui->tiptempslide->value();
+   // ui->label->setText("tempchange");
+   // ui->console->append("test");
+   // qInfo() << ui->tiptempslide->value();
 }
 
 void MainWindow::on_tiptempslide_sliderReleased()
@@ -397,8 +414,9 @@ void MainWindow::on_tiptempslide_sliderReleased()
 
 void MainWindow::on_bedtempslide_sliderReleased()
 {
-    QString text = QString(ui->bedtempslide->value());
-    ui->setbedinput->setText( text );
+ //   qint8 slidevalue = ui->bedtempslide->value()
+ //   QString text = ;
+    ui->setbedinput->setText( QString(QString::number(ui->bedtempslide->value())) );
 }
 
 void MainWindow::on_lineEdit_returnPressed()
@@ -406,3 +424,21 @@ void MainWindow::on_lineEdit_returnPressed()
     on_sendbtn_clicked();
 }
 
+void MainWindow::on_timedevent(){
+//refresh
+ui->tiptempslide->setMaximum( 230) ;
+ ui->tiptempslide->setRange(0,250) ;
+ ui->bedtempslide->setMaximum( 110) ;
+
+ ui->bedtempslide->setRange(0,110) ;
+ ui->bedtempslide->setValue(50) ;
+  ui->tiptempslide->setValue(144) ;
+
+
+}
+
+void MainWindow::on_tiptempslide_valueChanged(int value)
+{
+    ui->settipinput->setText( QString(QString::number(ui->tiptempslide->value())) );
+
+}

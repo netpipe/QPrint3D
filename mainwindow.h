@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <QtSerialPort/QSerialPort>
 #include <QStringListModel>
+#include <QTimer>
 
 namespace Ui {
 class MainWindow;
@@ -24,7 +25,6 @@ public:
     void msgBox(QString);
 
 private slots:
-    void on_pushButton_clicked();
     void handleError(QSerialPort::SerialPortError error);
    // void openSerialPort();
     void closeSerialPort();
@@ -74,6 +74,9 @@ private slots:
     void on_lineEdit_returnPressed();
 
     void on_sendbtn_clicked();
+    void on_timedevent();
+
+    void on_tiptempslide_valueChanged(int value);
 
 private:
 
@@ -81,6 +84,7 @@ private:
     QSerialPort *serial;
     QStringListModel *model;
     QVector<QString > lines;
+    QTimer *timer;
 };
 
 #endif // MAINWINDOW_H
