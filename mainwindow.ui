@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>781</width>
+    <width>779</width>
     <height>530</height>
    </rect>
   </property>
@@ -30,7 +30,7 @@
        <enum>QTabWidget::Triangular</enum>
       </property>
       <property name="currentIndex">
-       <number>3</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="tab">
        <attribute name="title">
@@ -52,7 +52,7 @@
          </sizepolicy>
         </property>
         <property name="styleSheet">
-         <string notr="true">background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1,   stop:0 rgba(90, 86, 32, 255), stop:1 rgba(98, 111, 62, 255))</string>
+         <string notr="true">background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1,   stop:0 rgba(90, 86, 132, 20), stop:1 rgba(98, 111, 252, 155))</string>
         </property>
         <property name="title">
          <string>Movement</string>
@@ -580,7 +580,7 @@
           </widget>
          </item>
          <item row="4" column="0">
-          <widget class="QPushButton" name="pushButton_21">
+          <widget class="QPushButton" name="uploadsdbtn2">
            <property name="styleSheet">
             <string notr="true">background-color: rgb(155,255,0);</string>
            </property>
@@ -846,11 +846,102 @@
        <widget class="QOpenGLWidget" name="openGLWidget">
         <property name="geometry">
          <rect>
-          <x>50</x>
+          <x>20</x>
           <y>20</y>
           <width>611</width>
           <height>371</height>
          </rect>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="pushButton_5">
+        <property name="geometry">
+         <rect>
+          <x>650</x>
+          <y>30</y>
+          <width>41</width>
+          <height>27</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>side</string>
+        </property>
+       </widget>
+       <widget class="QSlider" name="verticalSlider">
+        <property name="geometry">
+         <rect>
+          <x>720</x>
+          <y>220</y>
+          <width>16</width>
+          <height>160</height>
+         </rect>
+        </property>
+        <property name="orientation">
+         <enum>Qt::Vertical</enum>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="pushButton_6">
+        <property name="geometry">
+         <rect>
+          <x>700</x>
+          <y>30</y>
+          <width>41</width>
+          <height>27</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>top</string>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="pushButton_7">
+        <property name="geometry">
+         <rect>
+          <x>650</x>
+          <y>90</y>
+          <width>91</width>
+          <height>27</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>animate</string>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="pushButton_8">
+        <property name="geometry">
+         <rect>
+          <x>700</x>
+          <y>60</y>
+          <width>41</width>
+          <height>27</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>front</string>
+        </property>
+       </widget>
+       <widget class="QLabel" name="label_2">
+        <property name="geometry">
+         <rect>
+          <x>660</x>
+          <y>280</y>
+          <width>51</width>
+          <height>19</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Layer</string>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="pushButton_9">
+        <property name="geometry">
+         <rect>
+          <x>650</x>
+          <y>60</y>
+          <width>41</width>
+          <height>27</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>front</string>
         </property>
        </widget>
       </widget>
@@ -1086,7 +1177,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>781</width>
+     <width>779</width>
      <height>24</height>
     </rect>
    </property>

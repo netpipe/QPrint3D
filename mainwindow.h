@@ -122,6 +122,10 @@ private slots:
    void loadSettings();
    void saveSettings();
 
+   void on_uploadprintbtn_3_clicked();
+
+   void on_uploadsdbtn2_clicked();
+
 private:
 
     Ui::MainWindow *ui;

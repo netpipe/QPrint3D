@@ -271,6 +271,8 @@ void MainWindow::on_pushButton_3_clicked()
 {
 
 
+    QString fileName = QFileDialog::getOpenFileName(this,
+         tr("Open GCode"), "/home", tr("GCode Files (*.gcode)"));
 
 //https://stackoverflow.com/questions/28408542/how-to-populate-qt-listview-with-content-from-a-text-file
     QStringList *allLines = new QStringList(); //Your list for lines from the file.
@@ -278,7 +280,7 @@ void MainWindow::on_pushButton_3_clicked()
 
      QStringListModel *linesModel = new QStringListModel(*allLines, NULL); //Your model to set to the view.
 
-     QFile file("/home/netpipe/text.gcode");
+     QFile file(fileName);
      if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
          return;
 
@@ -302,6 +304,9 @@ void MainWindow::on_pushButton_3_clicked()
 
 void MainWindow::on_opengcodebtn_clicked()
 {
+    QString fileName = QFileDialog::getOpenFileName(this,
+         tr("Open GCode"), "/home", tr("GCode Files (*.gcode)"));
+
     QFile file("/home/netpipe/text.gcode");
     file.open(QIODevice::ReadOnly);
     QTextStream stream(&file);
@@ -318,7 +323,7 @@ void MainWindow::on_opengcodebtn_clicked()
         lines << stream2->readLine();
     }
 
-QString text3 = QInputDialog::getText(this,"Title","text");
+
 }
 
 void MainWindow::on_uploadsdbtn_clicked()
@@ -335,8 +340,9 @@ void MainWindow::on_uploadsdbtn_clicked()
 void MainWindow::on_uploadprintbtn_clicked()
 {
     //pick filename
-    QString fileName = QFileDialog::getOpenFileName(this,
-         tr("Open GCode"), "/home", tr("GCode Files (*.gcode)"));
+    QString text3 = QInputDialog::getText(this,"Pick Filename to save","text");
+   // QString fileName = QFileDialog::getOpenFileName(this,
+   //      tr("Open GCode"), "/home", tr("GCode Files (*.gcode)"));
    // ui->fileName->setText(fileName);
 
     if (0){
@@ -584,3 +590,13 @@ void MainWindow::on_pauseSDbtn_2_clicked()
     sendCommand("M25;");
 }
 
+
+void MainWindow::on_uploadprintbtn_3_clicked()
+{
+    on_uploadprintbtn_clicked();
+}
+
+void MainWindow::on_uploadsdbtn2_clicked()
+{
+    on_uploadsdbtn_clicked();
+}
