@@ -640,3 +640,8 @@ void MainWindow::on_uploadsdbtn2_clicked()
 {
     on_uploadsdbtn_clicked();
 }
+
+void MainWindow::on_actionExit_triggered()
+{
+    QApplication::quit();
+}

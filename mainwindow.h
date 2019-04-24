@@ -126,6 +126,8 @@ private slots:
 
    void on_uploadsdbtn2_clicked();
 
+   void on_actionExit_triggered();
+
 private:
 
     Ui::MainWindow *ui;

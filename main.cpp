@@ -17,6 +17,8 @@ int main(int argc, char *argv[])
     QPixmap pixmap("./media/QPrint3D.png");
     QSplashScreen splash(pixmap);
 
+    a.setWindowIcon(QIcon(pixmap));
+
     splash.show();
    //     I::sleep(15); // splash is shown for 5 seconds
     MainWindow w;
