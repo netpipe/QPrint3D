@@ -5,6 +5,7 @@
 #include <QtSerialPort/QSerialPort>
 #include <QStringListModel>
 #include <QTimer>
+#include <QSettings>
 
 namespace Ui {
 class MainWindow;
@@ -118,6 +119,9 @@ private slots:
 
     void on_setTipbutton_clicked();
 
+   void loadSettings();
+   void saveSettings();
+
 private:
 
     Ui::MainWindow *ui;
@@ -125,6 +129,7 @@ private:
     QStringListModel *model;
     QVector<QString > lines;
     QTimer *timer;
+     QString m_settings;
 };
 
 #endif // MAINWINDOW_H

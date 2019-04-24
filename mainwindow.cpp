@@ -64,7 +64,39 @@ MainWindow::MainWindow(QWidget *parent) :
     // msec
     timer->start(1000);
 
+
+
+  //  this->setWindowOpacity(0.55);
+  //  this->setAttribute(Qt::WA_TranslucentBackground, true);
+  //  this->setStyleSheet("background-color: yellow;");
+
+    m_settings = QApplication::applicationDirPath().left(1) + ":/settings.ini";
+    saveSettings();
+    loadSettings();
+
 }
+
+void MainWindow::loadSettings()
+{
+ QSettings settings(m_settings, QSettings::NativeFormat);
+ QString sText = settings.value("text", "").toString();
+// if (label)
+// {
+//  ui->label->setText(sText);
+// }
+}
+
+void MainWindow::saveSettings()
+{
+ QSettings settings(m_settings, QSettings::NativeFormat);
+ QString sText = "testing";//(label) ? label->text() : "";
+ settings.setValue("text", sText);
+ //if (label)
+ //{
+ // ui->label->setText(sText);
+ //}
+}
+
 
 void MainWindow::closeSerialPort()
 {
@@ -291,12 +323,13 @@ QString text3 = QInputDialog::getText(this,"Title","text");
 
 void MainWindow::on_uploadsdbtn_clicked()
 {
+        if (0){
       sendCommand("M21;"); // get sdcard ready
       sendCommand("M28 filename.txt;"); //write to file
 
       // send code here
       sendCommand("M29;"); //stop writing
-
+    }
 }
 
 void MainWindow::on_uploadprintbtn_clicked()
@@ -306,6 +339,8 @@ void MainWindow::on_uploadprintbtn_clicked()
          tr("Open GCode"), "/home", tr("GCode Files (*.gcode)"));
    // ui->fileName->setText(fileName);
 
+    if (0){
+
     sendCommand("M21;"); // get sdcard ready
     sendCommand("M28 filename.txt;"); //write to file
 
@@ -313,6 +348,7 @@ void MainWindow::on_uploadprintbtn_clicked()
     sendCommand("M29;"); //stop writing
     sendCommand("M23 filename.txt;"); //
     sendCommand("M24;"); //start printing
+    }
 }
 
 
@@ -338,11 +374,11 @@ void MainWindow::on_printbtn_clicked()
 
        //parse position for validm114
         int validm114=0;
-
-       if (validm114) {
+        //wait for valid m114 before doing more
+       while (!validm114) { //or specified time
            for (int i=1;10,i++;){
            //QString currentline = lines[1].toStdString();
-                   lines.pop_front();
+                 //  lines.pop_front();
 
         //send 10 lines
        //  sendCommand(currentline);
@@ -412,7 +448,7 @@ void MainWindow::on_tiptempslide_valueChanged(int value)
 
 void MainWindow::on_setTipbutton_clicked()
 {
-      ui->tiptempslide->setValue(QString::number(ui->settipinput->text())) ;
+      //ui->tiptempslide->setValue(QString::number(ui->settipinput->text())) ;
 }
 
 
