@@ -6,6 +6,8 @@
 
 QT       += core gui serialport
 
+RC_ICONS += ./media/QPrint3D.ico
+
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TARGET = yk
