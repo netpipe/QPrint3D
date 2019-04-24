@@ -6,16 +6,16 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>779</width>
-    <height>530</height>
+    <width>776</width>
+    <height>479</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>QPrint3D</string>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <layout class="QVBoxLayout" name="verticalLayout">
-    <item>
+   <layout class="QGridLayout" name="gridLayout">
+    <item row="1" column="0">
      <widget class="QTabWidget" name="printTabs">
       <property name="sizePolicy">
        <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
@@ -40,7 +40,7 @@
         <property name="geometry">
          <rect>
           <x>170</x>
-          <y>30</y>
+          <y>0</y>
           <width>371</width>
           <height>231</height>
          </rect>
@@ -307,9 +307,9 @@
         <property name="geometry">
          <rect>
           <x>10</x>
-          <y>270</y>
+          <y>240</y>
           <width>531</width>
-          <height>131</height>
+          <height>111</height>
          </rect>
         </property>
         <property name="sizePolicy">
@@ -319,7 +319,7 @@
          </sizepolicy>
         </property>
         <property name="title">
-         <string>Position</string>
+         <string>Status</string>
         </property>
         <layout class="QGridLayout" name="gridLayout_3">
          <item row="3" column="4">
@@ -348,6 +348,9 @@
          </item>
          <item row="3" column="3">
           <widget class="QSlider" name="bedtempslide">
+           <property name="styleSheet">
+            <string notr="true">background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0,   stop:0 rgba(60, 86, 162, 255), stop:1 rgba(150,250,250, 255))</string>
+           </property>
            <property name="maximum">
             <number>110</number>
            </property>
@@ -387,13 +390,6 @@
            </property>
           </widget>
          </item>
-         <item row="0" column="5">
-          <widget class="QLabel" name="label_5">
-           <property name="text">
-            <string>Z</string>
-           </property>
-          </widget>
-         </item>
          <item row="3" column="0">
           <widget class="QLabel" name="label_7">
            <property name="text">
@@ -415,17 +411,13 @@
            </property>
           </widget>
          </item>
-         <item row="0" column="6">
-          <widget class="QLineEdit" name="zcoord">
-           <property name="text">
-            <string>0</string>
-           </property>
-          </widget>
-         </item>
          <item row="2" column="3">
           <widget class="QSlider" name="tiptempslide">
            <property name="enabled">
             <bool>false</bool>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0,   stop:0 rgba(60, 86, 162, 255), stop:1 rgba(150,250,250, 255))</string>
            </property>
            <property name="maximum">
             <number>230</number>
@@ -445,30 +437,25 @@
          <item row="2" column="0">
           <widget class="QLabel" name="label_6">
            <property name="text">
-            <string>Tip/Hotend Temperature</string>
+            <string>Tip/Hotend Temp</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="4">
+          <widget class="QLabel" name="label_5">
+           <property name="text">
+            <string>Z</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="6">
+          <widget class="QLineEdit" name="zcoord">
+           <property name="text">
+            <string>0</string>
            </property>
           </widget>
          </item>
         </layout>
-       </widget>
-       <widget class="QLabel" name="label">
-        <property name="geometry">
-         <rect>
-          <x>9</x>
-          <y>9</y>
-          <width>69</width>
-          <height>19</height>
-         </rect>
-        </property>
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="text">
-         <string>TextLabel</string>
-        </property>
        </widget>
        <widget class="QGroupBox" name="groupBox">
         <property name="geometry">
@@ -476,7 +463,7 @@
           <x>550</x>
           <y>0</y>
           <width>201</width>
-          <height>421</height>
+          <height>351</height>
          </rect>
         </property>
         <property name="sizePolicy">
@@ -485,32 +472,13 @@
           <verstretch>0</verstretch>
          </sizepolicy>
         </property>
+        <property name="styleSheet">
+         <string notr="true"/>
+        </property>
         <property name="title">
          <string>Debug</string>
         </property>
         <layout class="QGridLayout" name="gridLayout_10">
-         <item row="1" column="0" colspan="2">
-          <widget class="QGroupBox" name="groupBox_9">
-           <property name="title">
-            <string>Send Command with ;</string>
-           </property>
-           <layout class="QGridLayout" name="gridLayout_2">
-            <item row="1" column="0">
-             <widget class="QPushButton" name="sendbtn">
-              <property name="styleSheet">
-               <string notr="true">background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1,   stop:0 rgba(60, 56,155, 155), stop:1 rgba(58, 111, 62,155))</string>
-              </property>
-              <property name="text">
-               <string>Send</string>
-              </property>
-             </widget>
-            </item>
-            <item row="0" column="0">
-             <widget class="QLineEdit" name="lineEdit"/>
-            </item>
-           </layout>
-          </widget>
-         </item>
          <item row="2" column="1">
           <widget class="QPushButton" name="pushButton_22">
            <property name="enabled">
@@ -522,7 +490,7 @@
           </widget>
          </item>
          <item row="3" column="0" colspan="2">
-          <widget class="QLabel" name="label_19">
+          <widget class="QLabel" name="label">
            <property name="text">
             <string>Progress: Ready</string>
            </property>
@@ -538,13 +506,26 @@
          <item row="0" column="0" colspan="2">
           <widget class="QTextEdit" name="console"/>
          </item>
+         <item row="1" column="0">
+          <widget class="QLineEdit" name="lineEdit"/>
+         </item>
+         <item row="1" column="1">
+          <widget class="QPushButton" name="sendbtn">
+           <property name="styleSheet">
+            <string notr="true">background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1,   stop:0 rgba(60, 56,155, 155), stop:1 rgba(58, 111, 62,155))</string>
+           </property>
+           <property name="text">
+            <string>Send With ;</string>
+           </property>
+          </widget>
+         </item>
         </layout>
        </widget>
        <widget class="QGroupBox" name="groupBox_6">
         <property name="geometry">
          <rect>
-          <x>9</x>
-          <y>34</y>
+          <x>10</x>
+          <y>0</y>
           <width>151</width>
           <height>231</height>
          </rect>
@@ -554,6 +535,9 @@
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1,   stop:0 rgba(160, 186, 62, 55), stop:1 rgba(98, 211, 162, 255))</string>
         </property>
         <property name="title">
          <string>PrintBox</string>
@@ -651,10 +635,10 @@
        <widget class="QListView" name="listView_2">
         <property name="geometry">
          <rect>
-          <x>20</x>
-          <y>40</y>
-          <width>871</width>
-          <height>71</height>
+          <x>140</x>
+          <y>80</y>
+          <width>581</width>
+          <height>31</height>
          </rect>
         </property>
        </widget>
@@ -664,73 +648,8 @@
         </property>
         <property name="geometry">
          <rect>
-          <x>20</x>
-          <y>10</y>
-          <width>91</width>
-          <height>27</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string>Open</string>
-        </property>
-       </widget>
-       <widget class="QPushButton" name="pushButton_4">
-        <property name="geometry">
-         <rect>
-          <x>120</x>
-          <y>10</y>
-          <width>91</width>
-          <height>27</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string>Save</string>
-        </property>
-       </widget>
-       <widget class="QPushButton" name="uploadsdbtn">
-        <property name="geometry">
-         <rect>
-          <x>220</x>
-          <y>10</y>
-          <width>91</width>
-          <height>27</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string>UploadSD</string>
-        </property>
-       </widget>
-       <widget class="QPushButton" name="uploadprintbtn">
-        <property name="geometry">
-         <rect>
-          <x>320</x>
-          <y>10</y>
-          <width>101</width>
-          <height>27</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string>Upload/Print</string>
-        </property>
-       </widget>
-       <widget class="QPushButton" name="printbtn">
-        <property name="geometry">
-         <rect>
-          <x>430</x>
-          <y>10</y>
-          <width>101</width>
-          <height>27</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string>Print</string>
-        </property>
-       </widget>
-       <widget class="QPushButton" name="opengcodebtn">
-        <property name="geometry">
-         <rect>
           <x>30</x>
-          <y>180</y>
+          <y>80</y>
           <width>91</width>
           <height>27</height>
          </rect>
@@ -743,11 +662,92 @@
         <property name="geometry">
          <rect>
           <x>20</x>
-          <y>210</y>
-          <width>881</width>
-          <height>261</height>
+          <y>120</y>
+          <width>721</width>
+          <height>221</height>
          </rect>
         </property>
+        <property name="styleSheet">
+         <string notr="true">background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1,   stop:0 rgba(160, 186, 62, 55), stop:1 rgba(98, 211, 162, 255))</string>
+        </property>
+       </widget>
+       <widget class="QGroupBox" name="groupBox_12">
+        <property name="geometry">
+         <rect>
+          <x>20</x>
+          <y>0</y>
+          <width>701</width>
+          <height>71</height>
+         </rect>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1,   stop:0 rgba(160, 186, 62, 55), stop:1 rgba(98, 211, 162, 255))</string>
+        </property>
+        <property name="title">
+         <string>PrintBox</string>
+        </property>
+        <layout class="QGridLayout" name="gridLayout_9">
+         <item row="0" column="1">
+          <widget class="QPushButton" name="pushButton_4">
+           <property name="styleSheet">
+            <string notr="true">background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1,   stop:0 rgba(60, 86, 162, 255), stop:1 rgba(150,250,250, 255))</string>
+           </property>
+           <property name="text">
+            <string>Save</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="4">
+          <widget class="QPushButton" name="printbtn">
+           <property name="styleSheet">
+            <string notr="true">background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1,   stop:0 rgba(60, 86, 162, 255), stop:1 rgba(150,250,250, 255))</string>
+           </property>
+           <property name="text">
+            <string>Print</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="5">
+          <widget class="QPushButton" name="recoverbtn">
+           <property name="styleSheet">
+            <string notr="true">background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1,   stop:0 rgba(60, 86, 162, 255), stop:1 rgba(150,250,250, 255))</string>
+           </property>
+           <property name="text">
+            <string>Recover</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="0">
+          <widget class="QPushButton" name="opengcodebtn">
+           <property name="styleSheet">
+            <string notr="true">background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1,   stop:0 rgba(60, 86, 162, 255), stop:1 rgba(150,250,250, 255))</string>
+           </property>
+           <property name="text">
+            <string>Open</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="3">
+          <widget class="QPushButton" name="uploadprintbtn">
+           <property name="styleSheet">
+            <string notr="true">background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1,   stop:0 rgba(60, 86, 162, 255), stop:1 rgba(150,250,250, 255))</string>
+           </property>
+           <property name="text">
+            <string>Upload/Print</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="2">
+          <widget class="QPushButton" name="uploadsdbtn">
+           <property name="styleSheet">
+            <string notr="true">background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1,   stop:0 rgba(60, 86, 162, 255), stop:1 rgba(150,250,250, 255))</string>
+           </property>
+           <property name="text">
+            <string>UploadSD</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
        </widget>
       </widget>
       <widget class="QWidget" name="tab_2">
@@ -763,12 +763,18 @@
           <height>172</height>
          </rect>
         </property>
+        <property name="styleSheet">
+         <string notr="true"/>
+        </property>
         <property name="title">
          <string>Extra Gcode</string>
         </property>
         <layout class="QGridLayout" name="gridLayout_7">
          <item row="0" column="0">
           <widget class="QPushButton" name="saveeeprombtn">
+           <property name="styleSheet">
+            <string notr="true">background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1,   stop:0 rgba(60, 86, 162, 255), stop:1 rgba(150,250,250, 255))</string>
+           </property>
            <property name="text">
             <string>Save EEprom</string>
            </property>
@@ -776,6 +782,9 @@
          </item>
          <item row="0" column="1">
           <widget class="QPushButton" name="pushButton_28">
+           <property name="styleSheet">
+            <string notr="true">background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1,   stop:0 rgba(60, 86, 162, 255), stop:1 rgba(150,250,250, 255))</string>
+           </property>
            <property name="text">
             <string>HalfTipTemp</string>
            </property>
@@ -783,6 +792,9 @@
          </item>
          <item row="1" column="0">
           <widget class="QPushButton" name="unjambtn">
+           <property name="styleSheet">
+            <string notr="true">background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1,   stop:0 rgba(60, 86, 162, 255), stop:1 rgba(150,250,250, 255))</string>
+           </property>
            <property name="text">
             <string>UnJam</string>
            </property>
@@ -790,6 +802,9 @@
          </item>
          <item row="2" column="0">
           <widget class="QPushButton" name="unloadbtn">
+           <property name="styleSheet">
+            <string notr="true">background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1,   stop:0 rgba(60, 86, 162, 255), stop:1 rgba(150,250,250, 255))</string>
+           </property>
            <property name="text">
             <string>Unload</string>
            </property>
@@ -797,6 +812,9 @@
          </item>
          <item row="3" column="0">
           <widget class="QPushButton" name="loadbtn">
+           <property name="styleSheet">
+            <string notr="true">background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1,   stop:0 rgba(60, 86, 162, 255), stop:1 rgba(150,250,250, 255))</string>
+           </property>
            <property name="text">
             <string>Load</string>
            </property>
@@ -804,6 +822,9 @@
          </item>
          <item row="1" column="1">
           <widget class="QPushButton" name="pushButton_29">
+           <property name="styleSheet">
+            <string notr="true">background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1,   stop:0 rgba(60, 86, 162, 255), stop:1 rgba(150,250,250, 255))</string>
+           </property>
            <property name="text">
             <string>HalfBedTemp</string>
            </property>
@@ -811,6 +832,9 @@
          </item>
          <item row="2" column="1">
           <widget class="QPushButton" name="pushButton_30">
+           <property name="styleSheet">
+            <string notr="true">background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1,   stop:0 rgba(60, 86, 162, 255), stop:1 rgba(150,250,250, 255))</string>
+           </property>
            <property name="text">
             <string>Set Debug</string>
            </property>
@@ -818,25 +842,15 @@
          </item>
          <item row="3" column="1">
           <widget class="QPushButton" name="pushButton_31">
+           <property name="styleSheet">
+            <string notr="true">background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1,   stop:0 rgba(60, 86, 162, 255), stop:1 rgba(150,250,250, 255))</string>
+           </property>
            <property name="text">
             <string>Motors Off</string>
            </property>
           </widget>
          </item>
         </layout>
-       </widget>
-       <widget class="QLabel" name="label_20">
-        <property name="geometry">
-         <rect>
-          <x>390</x>
-          <y>20</y>
-          <width>69</width>
-          <height>19</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string>TextLabel</string>
-        </property>
        </widget>
       </widget>
       <widget class="QWidget" name="tab_11">
@@ -847,9 +861,9 @@
         <property name="geometry">
          <rect>
           <x>20</x>
-          <y>20</y>
+          <y>10</y>
           <width>611</width>
-          <height>371</height>
+          <height>341</height>
          </rect>
         </property>
        </widget>
@@ -870,10 +884,13 @@
         <property name="geometry">
          <rect>
           <x>720</x>
-          <y>220</y>
+          <y>190</y>
           <width>16</width>
           <height>160</height>
          </rect>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1,   stop:0 rgba(60, 86, 162, 255), stop:1 rgba(150,250,250, 255))</string>
         </property>
         <property name="orientation">
          <enum>Qt::Vertical</enum>
@@ -922,7 +939,7 @@
         <property name="geometry">
          <rect>
           <x>660</x>
-          <y>280</y>
+          <y>190</y>
           <width>51</width>
           <height>19</height>
          </rect>
@@ -955,165 +972,122 @@
           <property name="title">
            <string>Settings</string>
           </property>
-          <widget class="QLabel" name="label_11">
-           <property name="geometry">
-            <rect>
-             <x>40</x>
-             <y>60</y>
-             <width>121</width>
-             <height>19</height>
-            </rect>
-           </property>
-           <property name="text">
-            <string>Window Color</string>
-           </property>
-          </widget>
-          <widget class="QLineEdit" name="lineEdit_2">
-           <property name="geometry">
-            <rect>
-             <x>180</x>
-             <y>60</y>
-             <width>113</width>
-             <height>27</height>
-            </rect>
-           </property>
-          </widget>
-          <widget class="QLineEdit" name="lineEdit_3">
-           <property name="geometry">
-            <rect>
-             <x>180</x>
-             <y>100</y>
-             <width>113</width>
-             <height>27</height>
-            </rect>
-           </property>
-          </widget>
-          <widget class="QLabel" name="label_12">
-           <property name="geometry">
-            <rect>
-             <x>40</x>
-             <y>100</y>
-             <width>121</width>
-             <height>19</height>
-            </rect>
-           </property>
-           <property name="text">
-            <string>GUI Refresh Time</string>
-           </property>
-          </widget>
-          <widget class="QLabel" name="label_13">
-           <property name="geometry">
-            <rect>
-             <x>40</x>
-             <y>140</y>
-             <width>121</width>
-             <height>19</height>
-            </rect>
-           </property>
-           <property name="text">
-            <string>Baudrate</string>
-           </property>
-          </widget>
-          <widget class="QLineEdit" name="lineEdit_5">
-           <property name="geometry">
-            <rect>
-             <x>180</x>
-             <y>130</y>
-             <width>113</width>
-             <height>27</height>
-            </rect>
-           </property>
-          </widget>
           <widget class="QGroupBox" name="groupBox_8">
            <property name="geometry">
             <rect>
-             <x>340</x>
-             <y>120</y>
-             <width>266</width>
-             <height>139</height>
+             <x>270</x>
+             <y>110</y>
+             <width>181</width>
+             <height>121</height>
             </rect>
            </property>
            <property name="title">
             <string>Soft Limits</string>
            </property>
-           <layout class="QGridLayout" name="gridLayout_9">
-            <item row="0" column="0">
-             <widget class="QLabel" name="label_14">
-              <property name="text">
-               <string>printer height</string>
-              </property>
-             </widget>
-            </item>
-            <item row="0" column="1">
-             <widget class="QLineEdit" name="lineEdit_4"/>
-            </item>
-            <item row="1" column="0">
-             <widget class="QLabel" name="label_15">
-              <property name="text">
-               <string>printer width</string>
-              </property>
-             </widget>
-            </item>
-            <item row="1" column="1">
-             <widget class="QLineEdit" name="lineEdit_6"/>
-            </item>
-            <item row="2" column="0">
-             <widget class="QLabel" name="label_16">
-              <property name="text">
-               <string>printer depth</string>
-              </property>
-             </widget>
-            </item>
-            <item row="2" column="1">
-             <widget class="QLineEdit" name="lineEdit_7"/>
-            </item>
-           </layout>
-          </widget>
-          <widget class="QLineEdit" name="lineEdit_8">
-           <property name="geometry">
-            <rect>
-             <x>180</x>
-             <y>170</y>
-             <width>113</width>
-             <height>27</height>
-            </rect>
-           </property>
-          </widget>
-          <widget class="QLabel" name="label_17">
-           <property name="geometry">
-            <rect>
-             <x>40</x>
-             <y>180</y>
-             <width>121</width>
-             <height>19</height>
-            </rect>
-           </property>
-           <property name="text">
-            <string>Device</string>
-           </property>
-          </widget>
-          <widget class="QLineEdit" name="lineEdit_9">
-           <property name="geometry">
-            <rect>
-             <x>180</x>
-             <y>210</y>
-             <width>113</width>
-             <height>27</height>
-            </rect>
-           </property>
-          </widget>
-          <widget class="QLabel" name="label_18">
-           <property name="geometry">
-            <rect>
-             <x>40</x>
-             <y>220</y>
-             <width>121</width>
-             <height>19</height>
-            </rect>
-           </property>
-           <property name="text">
-            <string>Device</string>
-           </property>
+           <widget class="QLabel" name="label_14">
+            <property name="geometry">
+             <rect>
+              <x>12</x>
+              <y>34</y>
+              <width>94</width>
+              <height>16</height>
+             </rect>
+            </property>
+            <property name="text">
+             <string>printer height</string>
+            </property>
+           </widget>
+           <widget class="QLineEdit" name="lineEdit_4">
+            <property name="geometry">
+             <rect>
+              <x>112</x>
+              <y>34</y>
+              <width>57</width>
+              <height>16</height>
+             </rect>
+            </property>
+            <property name="text">
+             <string>200</string>
+            </property>
+           </widget>
+           <widget class="QLabel" name="label_15">
+            <property name="geometry">
+             <rect>
+              <x>12</x>
+              <y>55</y>
+              <width>94</width>
+              <height>16</height>
+             </rect>
+            </property>
+            <property name="text">
+             <string>printer width</string>
+            </property>
+           </widget>
+           <widget class="QLineEdit" name="lineEdit_6">
+            <property name="geometry">
+             <rect>
+              <x>112</x>
+              <y>55</y>
+              <width>57</width>
+              <height>16</height>
+             </rect>
+            </property>
+            <property name="text">
+             <string>200</string>
+            </property>
+           </widget>
+           <widget class="QLabel" name="label_16">
+            <property name="geometry">
+             <rect>
+              <x>12</x>
+              <y>75</y>
+              <width>94</width>
+              <height>16</height>
+             </rect>
+            </property>
+            <property name="text">
+             <string>printer depth</string>
+            </property>
+           </widget>
+           <widget class="QLineEdit" name="lineEdit_7">
+            <property name="geometry">
+             <rect>
+              <x>112</x>
+              <y>75</y>
+              <width>57</width>
+              <height>16</height>
+             </rect>
+            </property>
+            <property name="text">
+             <string>200</string>
+            </property>
+           </widget>
+           <widget class="QLineEdit" name="lineEdit_12">
+            <property name="geometry">
+             <rect>
+              <x>110</x>
+              <y>100</y>
+              <width>57</width>
+              <height>16</height>
+             </rect>
+            </property>
+            <property name="text">
+             <string>0</string>
+            </property>
+           </widget>
+           <widget class="QLabel" name="label_25">
+            <property name="geometry">
+             <rect>
+              <x>10</x>
+              <y>100</y>
+              <width>94</width>
+              <height>16</height>
+             </rect>
+            </property>
+            <property name="text">
+             <string>jog speed</string>
+            </property>
+           </widget>
           </widget>
           <widget class="QPushButton" name="pushButton">
            <property name="geometry">
@@ -1141,28 +1115,244 @@
             <string>Load</string>
            </property>
           </widget>
-          <widget class="QLabel" name="label_37">
+          <widget class="QGroupBox" name="groupBox_2">
            <property name="geometry">
             <rect>
-             <x>40</x>
-             <y>260</y>
-             <width>141</width>
-             <height>19</height>
+             <x>20</x>
+             <y>20</y>
+             <width>241</width>
+             <height>81</height>
             </rect>
            </property>
-           <property name="text">
-            <string>max extrude speed</string>
+           <property name="title">
+            <string>GUI</string>
            </property>
+           <layout class="QGridLayout" name="gridLayout_4">
+            <item row="1" column="0">
+             <widget class="QLabel" name="label_12">
+              <property name="text">
+               <string>GUI Refresh Time</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="0">
+             <widget class="QLabel" name="label_11">
+              <property name="text">
+               <string>Window Color</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="1">
+             <widget class="QLineEdit" name="lineEdit_2"/>
+            </item>
+            <item row="1" column="1">
+             <widget class="QLineEdit" name="lineEdit_3">
+              <property name="text">
+               <string>1000</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
           </widget>
-          <widget class="QLineEdit" name="lineEdit_19">
+          <widget class="QGroupBox" name="groupBox_10">
            <property name="geometry">
             <rect>
-             <x>180</x>
-             <y>250</y>
-             <width>113</width>
-             <height>27</height>
+             <x>20</x>
+             <y>110</y>
+             <width>241</width>
+             <height>121</height>
             </rect>
            </property>
+           <property name="title">
+            <string>Printer</string>
+           </property>
+           <layout class="QGridLayout" name="gridLayout_11">
+            <item row="0" column="0">
+             <widget class="QLabel" name="label_13">
+              <property name="text">
+               <string>Baudrate</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="1">
+             <widget class="QLineEdit" name="lineEdit_5">
+              <property name="text">
+               <string>115200</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="0">
+             <widget class="QLabel" name="label_17">
+              <property name="text">
+               <string>Device</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="1">
+             <widget class="QLineEdit" name="lineEdit_8"/>
+            </item>
+            <item row="2" column="0">
+             <widget class="QLabel" name="label_18">
+              <property name="text">
+               <string>Port</string>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="1">
+             <widget class="QLineEdit" name="lineEdit_9"/>
+            </item>
+            <item row="3" column="0">
+             <widget class="QLabel" name="label_37">
+              <property name="text">
+               <string>max extrude speed</string>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="1">
+             <widget class="QLineEdit" name="lineEdit_19">
+              <property name="text">
+               <string>300</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+          <widget class="QGroupBox" name="groupBox_11">
+           <property name="geometry">
+            <rect>
+             <x>460</x>
+             <y>20</y>
+             <width>271</width>
+             <height>201</height>
+            </rect>
+           </property>
+           <property name="title">
+            <string>Stats</string>
+           </property>
+           <widget class="QLabel" name="label_10">
+            <property name="geometry">
+             <rect>
+              <x>10</x>
+              <y>110</y>
+              <width>91</width>
+              <height>19</height>
+             </rect>
+            </property>
+            <property name="text">
+             <string>Good Prints</string>
+            </property>
+           </widget>
+           <widget class="QLabel" name="label_21">
+            <property name="geometry">
+             <rect>
+              <x>10</x>
+              <y>130</y>
+              <width>91</width>
+              <height>19</height>
+             </rect>
+            </property>
+            <property name="text">
+             <string>Failed Prints</string>
+            </property>
+           </widget>
+           <widget class="QListWidget" name="listWidget">
+            <property name="geometry">
+             <rect>
+              <x>150</x>
+              <y>10</y>
+              <width>111</width>
+              <height>171</height>
+             </rect>
+            </property>
+           </widget>
+           <widget class="QLabel" name="label_22">
+            <property name="geometry">
+             <rect>
+              <x>10</x>
+              <y>30</y>
+              <width>91</width>
+              <height>19</height>
+             </rect>
+            </property>
+            <property name="text">
+             <string>Print Log</string>
+            </property>
+           </widget>
+           <widget class="QLabel" name="label_19">
+            <property name="geometry">
+             <rect>
+              <x>100</x>
+              <y>110</y>
+              <width>41</width>
+              <height>19</height>
+             </rect>
+            </property>
+            <property name="text">
+             <string>0</string>
+            </property>
+           </widget>
+           <widget class="QLabel" name="label_24">
+            <property name="geometry">
+             <rect>
+              <x>100</x>
+              <y>130</y>
+              <width>41</width>
+              <height>19</height>
+             </rect>
+            </property>
+            <property name="text">
+             <string>0</string>
+            </property>
+           </widget>
+          </widget>
+          <widget class="QGroupBox" name="groupBox_9">
+           <property name="geometry">
+            <rect>
+             <x>20</x>
+             <y>250</y>
+             <width>441</width>
+             <height>81</height>
+            </rect>
+           </property>
+           <property name="title">
+            <string>Paths</string>
+           </property>
+           <layout class="QGridLayout" name="gridLayout_2">
+            <item row="0" column="0">
+             <widget class="QLabel" name="label_20">
+              <property name="text">
+               <string>Gcode Slicer</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="1">
+             <widget class="QLineEdit" name="lineEdit_10"/>
+            </item>
+            <item row="0" column="2">
+             <widget class="QPushButton" name="pushButton_10">
+              <property name="text">
+               <string>Path</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="0">
+             <widget class="QLabel" name="label_23">
+              <property name="text">
+               <string>Post Process</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="1">
+             <widget class="QLineEdit" name="lineEdit_11"/>
+            </item>
+            <item row="1" column="2">
+             <widget class="QPushButton" name="pushButton_11">
+              <property name="text">
+               <string>Path</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
           </widget>
          </widget>
         </item>
@@ -1177,7 +1367,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>779</width>
+     <width>776</width>
      <height>24</height>
     </rect>
    </property>

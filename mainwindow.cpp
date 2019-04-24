@@ -31,7 +31,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
 
 
-
+  //  this->setWindowTitle("QPrint3d");
 
 
 
@@ -267,7 +267,7 @@ void MainWindow::on_pushButton_4_clicked()
 
 }
 
-void MainWindow::on_pushButton_3_clicked()
+void MainWindow::on_pushButton_3_clicked()  // open file to listview
 {
 
 
@@ -323,6 +323,8 @@ void MainWindow::on_opengcodebtn_clicked()
         lines << stream2->readLine();
     }
 
+    this->setWindowTitle("QPrint3d "+fileName);
+ //   ui->filenamelabel->setText(fileName);
 
 }
 
@@ -340,16 +342,25 @@ void MainWindow::on_uploadsdbtn_clicked()
 void MainWindow::on_uploadprintbtn_clicked()
 {
     //pick filename
-    QString text3 = QInputDialog::getText(this,"Pick Filename to save","text");
+    QString text3 = QInputDialog::getText(this,"Pick Filename to save","gcode");
    // QString fileName = QFileDialog::getOpenFileName(this,
    //      tr("Open GCode"), "/home", tr("GCode Files (*.gcode)"));
    // ui->fileName->setText(fileName);
 
+    //check if printer connected
+
+    QString text = ui->textBrowser->toPlainText();
+    QTextStream * stream2 = new QTextStream(&text , QIODevice::ReadOnly);
+
+        //if text3 != "" then continue
     if (0){
 
     sendCommand("M21;"); // get sdcard ready
-    sendCommand("M28 filename.txt;"); //write to file
+    sendCommand("M28 "+text3); //write to file
 
+    while (!stream2->atEnd()) {
+        sendCommand(stream2->readLine());
+    }
     // send code here
     sendCommand("M29;"); //stop writing
     sendCommand("M23 filename.txt;"); //
@@ -364,14 +375,24 @@ void MainWindow::on_printbtn_clicked()
 {
     //write gcode buffer if it checks out
 
+    //check for printer connection
+
     int buffercount=10;
     int count=0;
 //if gx == received position
    //read file if gcodeedit is empty
 
-    int lcount=lines.count();
-    int icount=0;
-   while (lcount >= icount){ // loop whole buffer
+//    int lcount=lines.count();
+//    int icount=0;
+//   while (lcount >= icount){ // loop whole buffer
+
+       QString text = ui->textBrowser->toPlainText();
+       QTextStream * stream2 = new QTextStream(&text , QIODevice::ReadOnly);
+     //  QVector<QString > lines;
+       bool bstoploop=0;
+       while (!stream2->atEnd() && !bstoploop)
+       {
+         //   << stream2->readLine();
        //update progress bar / tip position
 
        //wait for receive position
@@ -380,19 +401,23 @@ void MainWindow::on_printbtn_clicked()
 
        //parse position for validm114
         int validm114=0;
+        int printbuffersize=10;
         //wait for valid m114 before doing more
-       while (!validm114) { //or specified time
-           for (int i=1;10,i++;){
-           //QString currentline = lines[1].toStdString();
+       while (validm114) { //or specified time
+       //    for (int i=1;10,i++;){
+          // QString currentline = lines[1].toStdString();
+           QString currentline = stream2->readLine();
                  //  lines.pop_front();
 
         //send 10 lines
-       //  sendCommand(currentline);
+         sendCommand(currentline);
+         if (count >= printbuffersize){ validm114=0; count++;};
         }
         sendCommand("M114;");
+        validm114=1;  //parse and wait for valid before sending more
+        count=0;
 
        }
-}
 
 }
 
@@ -442,6 +467,14 @@ ui->tiptempslide->setMaximum( 230) ;
  ui->bedtempslide->setRange(0,110) ;
  ui->bedtempslide->setValue(50) ;
   ui->tiptempslide->setValue(144) ;
+
+  QString btnstatus = ui->connectionbtn->text();
+  //check printer still connected
+  if (!serial->isOpen() && !btnstatus.compare("Disconnect"))
+  {
+      ui->connectionbtn->setText("Reconnect");
+       ui->connectionbtn->setStyleSheet("background-color: rgb(155,255,0);");
+  }
 
 
 }
