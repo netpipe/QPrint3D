@@ -224,40 +224,10 @@ void MainWindow::on_pushButton_16_clicked()
 sendCommand("G28 X0;");
 }
 
-void MainWindow::on_xm1_clicked()
-{
-    sendCommand("G28 X0;");
-}
 
-void MainWindow::on_homeallbtn_clicked()
-{
-    sendCommand("G28;");
-}
 
-void MainWindow::on_y10btn_clicked()
-{
-    float currentpos = ui->ycoord->text().toFloat();
-    //QString b;
-   // b.setNum(ui->ycoord->text());
-    float pos=currentpos+10;
-   // QString yposstr = QString::number(ypos);
-        sendCommand("G0 Y" + QString::number(pos) + ";");
-}
 
 //M70 P200 Message
-void MainWindow::on_y1btn_clicked()
-{
-    float currentpos = ui->ycoord->text().toFloat();
-    float pos=currentpos+1;
-   // QString yposstr = QString::number(ypos);
-        sendCommand("G0 Y" + QString::number(pos) + ";");
-}
-
-void MainWindow::on_emstopbtn_clicked()
-{
-     sendCommand("M117;");
-}
-
 
 
 void MainWindow::on_pushButton_4_clicked()
@@ -345,10 +315,7 @@ void MainWindow::on_uploadprintbtn_clicked()
     sendCommand("M24;"); //start printing
 }
 
-void MainWindow::on_pauseSDbtn_2_clicked()
-{
-    sendCommand("M25;");
-}
+
 
 
 void MainWindow::on_printbtn_clicked()
@@ -442,3 +409,142 @@ void MainWindow::on_tiptempslide_valueChanged(int value)
     ui->settipinput->setText( QString(QString::number(ui->tiptempslide->value())) );
 
 }
+
+void MainWindow::on_setTipbutton_clicked()
+{
+      ui->tiptempslide->setValue(QString::number(ui->settipinput->text())) ;
+}
+
+
+void MainWindow::on_em50btn_clicked()
+{
+    sendCommand("G0 E-50;");
+}
+
+void MainWindow::on_em10btn_clicked()
+{
+     sendCommand("G0 E-10;");
+}
+
+void MainWindow::on_em1btn_clicked()
+{
+    sendCommand("G0 E-1;");
+}
+
+void MainWindow::on_e1btn_clicked()
+{
+     sendCommand("G0 E1;");
+}
+
+void MainWindow::on_e10btn_clicked()
+{
+     sendCommand("G0 E10;");
+}
+
+void MainWindow::on_zm10_clicked()
+{
+    sendCommand("G0 Z-10;");
+}
+
+void MainWindow::on_zm1btn_clicked()
+{
+    sendCommand("G0 Z-1;");
+}
+
+void MainWindow::on_z1btn_clicked()
+{
+    sendCommand("G0 Z1;");
+}
+
+void MainWindow::on_z10btn_clicked()
+{
+    sendCommand("G0 Z10;");
+}
+
+void MainWindow::on_x1btn_clicked()
+{
+    sendCommand("G0 X1;");
+}
+
+void MainWindow::on_x10btn_clicked()
+{
+        sendCommand("G0 X10;");
+}
+
+void MainWindow::on_xm1_clicked()
+{
+    sendCommand("G28 X-1;");
+}
+
+void MainWindow::on_xm10btn_clicked()
+{
+    sendCommand("G28 X-10;");
+}
+
+void MainWindow::on_ym10btn_clicked()
+{
+    sendCommand("G28 Y-10;");
+}
+
+void MainWindow::on_ym1btn_clicked()
+{
+    sendCommand("G28 Y-1;");
+}
+
+void MainWindow::on_y1btn_clicked()
+{
+    float currentpos = ui->ycoord->text().toFloat();
+    float pos=currentpos+1;
+   // QString yposstr = QString::number(ypos);
+        sendCommand("G0 Y" + QString::number(pos) + ";");
+}
+
+void MainWindow::on_y10btn_clicked()
+{
+    float currentpos = ui->ycoord->text().toFloat();
+    //QString b;
+   // b.setNum(ui->ycoord->text());
+    float pos=currentpos+10;
+   // QString yposstr = QString::number(ypos);
+        sendCommand("G0 Y" + QString::number(pos) + ";");
+}
+
+void MainWindow::on_homeallbtn_clicked()
+{
+    sendCommand("G28;");
+}
+void MainWindow::on_homexbtn_clicked()
+{
+        sendCommand("G28 X0;");
+}
+
+void MainWindow::on_homeybtn_clicked()
+{
+        sendCommand("G28 Y0;");
+}
+
+void MainWindow::on_homezbtn_clicked()
+{
+        sendCommand("G28 Z0;");
+}
+
+void MainWindow::on_emstopbtn_clicked()
+{
+  //   sendCommand("M117;");
+}
+
+void MainWindow::on_pausebtn_clicked()
+{
+    sendCommand("M226;");
+}
+
+void MainWindow::on_pauseSDbtn_clicked()
+{
+    sendCommand("M24;");
+}
+
+void MainWindow::on_pauseSDbtn_2_clicked()
+{
+    sendCommand("M25;");
+}
+

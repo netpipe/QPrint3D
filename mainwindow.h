@@ -78,6 +78,46 @@ private slots:
 
     void on_tiptempslide_valueChanged(int value);
 
+    void on_em50btn_clicked();
+
+    void on_em10btn_clicked();
+
+    void on_em1btn_clicked();
+
+    void on_e1btn_clicked();
+
+    void on_e10btn_clicked();
+
+    void on_zm10_clicked();
+
+    void on_zm1btn_clicked();
+
+    void on_z1btn_clicked();
+
+    void on_z10btn_clicked();
+
+    void on_x1btn_clicked();
+
+    void on_x10btn_clicked();
+
+    void on_xm10btn_clicked();
+
+    void on_ym10btn_clicked();
+
+    void on_ym1btn_clicked();
+
+    void on_homexbtn_clicked();
+
+    void on_homeybtn_clicked();
+
+    void on_homezbtn_clicked();
+
+    void on_pausebtn_clicked();
+
+    void on_pauseSDbtn_clicked();
+
+    void on_setTipbutton_clicked();
+
 private:
 
     Ui::MainWindow *ui;
