@@ -545,6 +545,9 @@
         <layout class="QGridLayout" name="gridLayout_6">
          <item row="3" column="0">
           <widget class="QPushButton" name="printbtn_2">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
            <property name="styleSheet">
             <string notr="true">background-color: rgb(155,255,0);</string>
            </property>
@@ -699,6 +702,9 @@
          </item>
          <item row="0" column="4">
           <widget class="QPushButton" name="printbtn">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
            <property name="styleSheet">
             <string notr="true">background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1,   stop:0 rgba(60, 86, 162, 255), stop:1 rgba(150,250,250, 255))</string>
            </property>

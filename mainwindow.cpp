@@ -19,6 +19,13 @@
 //https://stackoverflow.com/questions/51209822/qtserialport-not-writing-to-serial-port
 //http://www.howtobuildsoftware.com/index.php/how-do/cBtm/c-qt-serial-port-writing-qt-serial-port-not-working
 
+//todo
+//verify all buttons working
+//verify successful print
+//impliment opengl widget
+//parse m114 from listbox to get valid position
+//movement buttons need current position to move around better
+
 
 
 
@@ -166,7 +173,7 @@ void MainWindow::on_sendbtn_clicked()
    {
    // serial->write("G28;\n");
         serial->write(x);
-       ui->label->setText("sent");
+       ui->label->setText("sent"+ x);
     }
 
 // serial->close();
@@ -411,7 +418,7 @@ void MainWindow::on_printbtn_clicked()
 
         //send 10 lines
          sendCommand(currentline);
-         if (count >= printbuffersize){ validm114=0; count++;};
+         if (count >= printbuffersize){ validm114=0; count++;}; //send m114 every buffer length to see where its at
         }
         sendCommand("M114;");
         validm114=1;  //parse and wait for valid before sending more
