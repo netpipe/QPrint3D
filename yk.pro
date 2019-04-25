@@ -30,10 +30,20 @@ SOURCES += \
         mainwindow.cpp \
     gsim/GCodeInterpreter.cpp \
     gsim/GLDrawer.cpp \
+    gsim/Helper.cpp \
+    gsim/DockLayerList.cpp \
+    gsim/DockOpenGL.cpp \
+    gsim/GCodeInterpreter.cpp \
+    gsim/GLDrawer.cpp \
     gsim/Helper.cpp
 
 HEADERS += \
         mainwindow.h \
+    gsim/GCodeInterpreter.h \
+    gsim/GLDrawer.h \
+    gsim/Helper.hpp \
+    gsim/DockLayerList.h \
+    gsim/DockOpenGL.h \
     gsim/GCodeInterpreter.h \
     gsim/GLDrawer.h \
     gsim/Helper.hpp
