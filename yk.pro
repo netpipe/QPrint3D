@@ -27,10 +27,16 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
         main.cpp \
-        mainwindow.cpp
+        mainwindow.cpp \
+    gsim/GCodeInterpreter.cpp \
+    gsim/GLDrawer.cpp \
+    gsim/Helper.cpp
 
 HEADERS += \
-        mainwindow.h
+        mainwindow.h \
+    gsim/GCodeInterpreter.h \
+    gsim/GLDrawer.h \
+    gsim/Helper.hpp
 
 FORMS += \
         mainwindow.ui
