@@ -129,6 +129,8 @@ private slots:
 
    void on_bedpowerbtn_clicked();
 
+   void on_tippowerbtn_clicked();
+
 private:
 
     Ui::MainWindow *ui;
