@@ -80,6 +80,8 @@ MainWindow::MainWindow(QWidget *parent) :
     format.setStencilBufferSize(8);
     format.setVersion(3, 2);
     ui->widget->setFormat(format);
+
+    msgBox("For Testing Purposes, its not ready unless you know how to code try in a month");
 }
 
 void MainWindow::loadSettings()
@@ -199,8 +201,8 @@ void MainWindow::serialReceived()
      //  int x = QString::compare(str1, str2, Qt::CaseInsensitive);  // if strings are equal x should return 0
      //  QString data = ui->data->toPlainText();
 
-       if (datas.at(0)=="X"){
-            QStringList strList = datas.split(" "); // need to split this twice once for space then for : to get the values
+       if (datas.at(0)=="X" && datas.at(1)==":"){//todo check second char is a :
+            QStringList strList = datas.split(" ");
             QString X1 = strList.value(0);
             QString Y1 = strList.value(1);
             QString Z1 = strList.value(2);
@@ -251,6 +253,7 @@ void MainWindow::on_connectionbtn_clicked()
        {
             ui->connectionbtn->setText("Disconnect");
             ui->connectionbtn->setStyleSheet("background-color: red");
+         //    sendCommand("M114;");
         }
     }else{
        // ui->label->setText("closing port");
@@ -259,11 +262,13 @@ void MainWindow::on_connectionbtn_clicked()
         {
             ui->connectionbtn->setText("Connect");
              ui->connectionbtn->setStyleSheet("background-color: rgb(155,255,0);");
+             serial->clear();
+             disconnect(serial,SIGNAL(readyRead()),this,SLOT(serialReceived()));
         }
 
     }
     //check if printer in ascii mode by lookikng for checksum error ?
-        sendCommand("M114;");
+
 }
 
 
@@ -275,7 +280,7 @@ void MainWindow::on_pushButton_4_clicked()
 
 }
 
-void MainWindow::on_pushButton_3_clicked()  // open file to listview
+void MainWindow::on_pushButton_3_clicked()  // open file to listview not needed
 {
 
 
@@ -345,7 +350,7 @@ void MainWindow::on_uploadsdbtn_clicked()
         QString text = ui->textBrowser->toPlainText();
         QTextStream * stream2 = new QTextStream(&text , QIODevice::ReadOnly);
 
-        if (0){
+        if (1){
 
         sendCommand("M21;"); // get sdcard ready
         sendCommand("M28 "+text3); //write to file
@@ -373,13 +378,11 @@ void MainWindow::on_uploadprintbtn_clicked()
 
 void MainWindow::on_printbtn_clicked()
 {
-    //write gcode buffer if it checks out
-
+    //btnstatus.compare("Disconnect")
     //check for printer connection
 
     int buffercount=10;
     int count=0;
-//if gx == received position
    //read file if gcodeedit is empty
 
 //    int lcount=lines.count();
@@ -401,12 +404,10 @@ void MainWindow::on_printbtn_clicked()
         int printbuffersize=10;
 
        while (validm114) { //or specified time
-       //    for (int i=1;10,i++;){
+          //for (int i=1;10,i++;){
           // QString currentline = lines[1].toStdString();
            QString currentline = stream2->readLine();
                  //  lines.pop_front();
-
-        //send 10 lines
          sendCommand(currentline);
          if (count >= printbuffersize){ validm114=0; count++;}; //send m114 every buffer length to see where its at
         }
@@ -415,7 +416,6 @@ void MainWindow::on_printbtn_clicked()
         count=0;
 
        }
-
 }
 
 void MainWindow::on_printbtn_2_clicked()
