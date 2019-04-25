@@ -36,27 +36,16 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
 
-
-
-
-
-  //  this->setWindowTitle("QPrint3d");
-
-
-
-
+    this->setWindowTitle("QPrint3d");
 
     serial = new QSerialPort(this);
 //! [1]
   //  settings = new SettingsDialog;
 
-
    // connect(serial, SIGNAL(error(QSerialPort::SerialPortError)), this,
     //        SLOT(handleError(QSerialPort::SerialPortError)));
 
-//! [2]
-   // connect(serial, SIGNAL(readyRead()), this, SLOT(readData()));
-//! [2]
+    //connect(serial, SIGNAL(readyRead()), this, SLOT(readData()));
     //connect(console, SIGNAL(getData(QByteArray)), this, SLOT(writeData(QByteArray)))
 
 
@@ -203,15 +192,7 @@ QString MainWindow::readData()
     //QString data = serial->readAll();
     //console->putData(data);
     ui->console->append(data);
-    QString datas = data;
 
-  //  int x = QString::compare(str1, str2, Qt::CaseInsensitive);  // if strings are equal x should return 0
-//    QString data = ui->data->toPlainText();
-
-    if (datas.at(0)=="X"){
-    //QStringList strList = data.split(" ");
-         ui->label->setText("Got Position");
-    }
 
    // return data.toStdString();
 }
@@ -224,6 +205,15 @@ void MainWindow::serialReceived()
    // qInfo() << output;
      //qInfo("testing");
      ui->console->append(output);
+       QString datas = output;
+
+     //  int x = QString::compare(str1, str2, Qt::CaseInsensitive);  // if strings are equal x should return 0
+   //    QString data = ui->data->toPlainText();
+
+       if (datas.at(0)=="X"){
+       //QStringList strList = data.split(" ");
+            ui->label->setText("Got Position");
+       }
 
 }
 
@@ -266,13 +256,6 @@ void MainWindow::on_connectionbtn_clicked()
     }
     //check if printer in ascii mode by lookikng for checksum error ?
 }
-
-void MainWindow::on_pushButton_16_clicked()
-{
-sendCommand("G28 X0;");
-}
-
-
 
 
 //M70 P200 Message

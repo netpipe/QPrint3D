@@ -36,8 +36,6 @@ private slots:
 
     void serialReceived();
 
-    void on_pushButton_16_clicked();
-
     void on_xm1_clicked();
 
     void on_homeallbtn_clicked();
