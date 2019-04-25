@@ -863,7 +863,7 @@
        <attribute name="title">
         <string>3D</string>
        </attribute>
-       <widget class="QOpenGLWidget" name="openGLWidget">
+       <widget class="QOpenGLWidget" name="widget">
         <property name="geometry">
          <rect>
           <x>20</x>

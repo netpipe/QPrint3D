@@ -138,7 +138,7 @@ private:
     QVector<QString > lines;
     QTimer *timer;
      QString m_settings;
-     //GLDrawer* drawer;
+     GLDrawer* drawer;
 };
 
 #endif // MAINWINDOW_H

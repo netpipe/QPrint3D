@@ -81,6 +81,13 @@ MainWindow::MainWindow(QWidget *parent) :
     saveSettings();
     loadSettings();
 
+  //  QOpenGLWidget *widget = new QOpenGLWidget();
+    drawer = new GLDrawer(ui->widget);
+    QSurfaceFormat format;
+    format.setDepthBufferSize(24);
+    format.setStencilBufferSize(8);
+    format.setVersion(3, 2);
+
 }
 
 void MainWindow::loadSettings()
