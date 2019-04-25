@@ -21,12 +21,14 @@
 
 //todo
 //verify all buttons working
-//verify successful print
-//impliment opengl widget
-//parse m114 from listbox to get valid position
+
+//parse m114 readData() from listbox to get valid position
 //movement buttons need current position to move around better
+//keyboard jog mode
+//launch commands list for parser
 
-
+//verify successful print from sd
+//verify successful print to printer iron out buffersize to keepthings fast
 
 
 MainWindow::MainWindow(QWidget *parent) :
