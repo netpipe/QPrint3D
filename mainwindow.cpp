@@ -87,7 +87,7 @@ MainWindow::MainWindow(QWidget *parent) :
     format.setDepthBufferSize(24);
     format.setStencilBufferSize(8);
     format.setVersion(3, 2);
-
+    ui->widget->setFormat(format);
 }
 
 void MainWindow::loadSettings()
@@ -286,7 +286,7 @@ void MainWindow::on_pushButton_3_clicked()  // open file to listview
 
 
     QString fileName = QFileDialog::getOpenFileName(this,
-         tr("Open GCode"), "/home", tr("GCode Files (*.gcode)"));
+         tr("Open GCode"), "./", tr("GCode Files (*.gcode)"));
 
 //https://stackoverflow.com/questions/28408542/how-to-populate-qt-listview-with-content-from-a-text-file
     QStringList *allLines = new QStringList(); //Your list for lines from the file.
@@ -316,12 +316,12 @@ void MainWindow::on_pushButton_3_clicked()  // open file to listview
 
 }
 
-void MainWindow::on_opengcodebtn_clicked()
+void MainWindow::on_opengcodebtn_clicked() // lineedit
 {
     QString fileName = QFileDialog::getOpenFileName(this,
-         tr("Open GCode"), "/home", tr("GCode Files (*.gcode)"));
+         tr("Open GCode"), "./", tr("GCode Files (*.gcode)"));
 
-    QFile file("/home/netpipe/text.gcode");
+    QFile file(fileName);
     file.open(QIODevice::ReadOnly);
     QTextStream stream(&file);
     QString content = stream.readAll();
@@ -339,6 +339,8 @@ void MainWindow::on_opengcodebtn_clicked()
 
     this->setWindowTitle("QPrint3d "+fileName);
  //   ui->filenamelabel->setText(fileName);
+
+   drawer->loadGCode(fileName.toStdString());
 
 }
 
