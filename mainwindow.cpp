@@ -27,6 +27,9 @@
 //movement buttons need current position to move around better
 //keyboard jog mode
 //launch commands list for parser
+//sdcard parser for already listed files to print sd.
+//settings need to be saved/loaded
+//need ability
 
 //verify successful print from sd
 //verify successful print to printer iron out buffersize to keepthings fast
@@ -43,26 +46,19 @@ MainWindow::MainWindow(QWidget *parent) :
 //! [1]
   //  settings = new SettingsDialog;
 
-   // connect(serial, SIGNAL(error(QSerialPort::SerialPortError)), this,
-    //        SLOT(handleError(QSerialPort::SerialPortError)));
-
-    //connect(serial, SIGNAL(readyRead()), this, SLOT(readData()));
-    //connect(console, SIGNAL(getData(QByteArray)), this, SLOT(writeData(QByteArray)))
-
-
-    ui->setupUi(this);
-
-    ui->emstopbtn->setStyleSheet("background-color: red");
+    connect(serial, SIGNAL(error(QSerialPort::SerialPortError)), this,
+            SLOT(handleError(QSerialPort::SerialPortError)));
 
     timer = new QTimer(this);
-
-    // setup signal and slot
     connect(timer, SIGNAL(timeout()),
           this, SLOT(on_timedevent()));
 
-    // msec
     timer->start(1000);
 
+
+
+    ui->setupUi(this);
+    ui->emstopbtn->setStyleSheet("background-color: red");
 
 
   //  this->setWindowOpacity(0.55);
@@ -82,6 +78,14 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->widget->setFormat(format);
 
     msgBox("For Testing Purposes, its not ready unless you know how to code try in a month");
+
+  //   qInfo() << args.value(1);
+}
+
+void MainWindow::passargs(QString args){
+
+    arg= args;
+    qInfo() << arg;
 }
 
 void MainWindow::loadSettings()
@@ -471,6 +475,7 @@ ui->tiptempslide->setMaximum( 230) ;
   {
       ui->connectionbtn->setText("Reconnect");
        ui->connectionbtn->setStyleSheet("background-color: rgb(155,255,0);");
+        disconnect(serial,SIGNAL(readyRead()),this,SLOT(serialReceived()));
   }
   else{
     //  sendCommand("M114;");

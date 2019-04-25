@@ -17,15 +17,13 @@ class MainWindow : public QMainWindow
 {
     Q_OBJECT
 
-
-
-
 public:
 
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
     void sendCommand(QString);
     void msgBox(QString);
+   void passargs(QString);
 
 private slots:
     void handleError(QSerialPort::SerialPortError error);
@@ -128,6 +126,7 @@ private slots:
 
    void on_actionExit_triggered();
 
+
 private:
 
     Ui::MainWindow *ui;
@@ -138,6 +137,7 @@ private:
      QString m_settings;
      GLDrawer* drawer;
      int validm114;
+     QString arg;
 };
 
 #endif // MAINWINDOW_H
