@@ -44,8 +44,6 @@ private slots:
 
     void on_emstopbtn_clicked();
 
-    void on_pushButton_4_clicked();
-
     void on_pushButton_3_clicked();
 
     void on_opengcodebtn_clicked();
@@ -126,6 +124,10 @@ private slots:
 
 
    void on_setBedbtn_clicked();
+
+   void on_comboBox_2_activated(const QString &arg1);
+
+   void on_bedpowerbtn_clicked();
 
 private:
 

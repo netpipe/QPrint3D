@@ -30,6 +30,7 @@
 //sdcard parser for already listed files to print sd.
 //settings need to be saved/loaded
 //need ability to thread the write routines it freezes whole program
+//combine pause resume button for sd print
 
 
 //verify successful print from sd
@@ -54,7 +55,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(timer, SIGNAL(timeout()),
           this, SLOT(on_timedevent()));
 
-    timer->start(1000);
+    timer->start(10000);
 
 
 
@@ -79,6 +80,9 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->widget->setFormat(format);
 
     msgBox("For Testing Purposes, its not ready unless you know how to code try in a month");
+
+    ui->statusbox->setTitle("Status: .");
+    ui->mprintbox->setTitle("PrintBox: connection");
 
   //   qInfo() << args.value(1);
 }
@@ -225,8 +229,13 @@ void MainWindow::serialReceived()
             strList = E1.split(":");
             E1 = strList.value(1);
             ui->xcoord->setText(X1);
-            ui->ycoord->setText(X1);
-            ui->zcoord->setText(X1);
+            ui->ycoord->setText(Y1);
+            ui->zcoord->setText(Z1);
+
+            ui->xposlabel->setText("X: "+X1);
+            ui->yposlabel->setText("Y: "+Y1);
+            ui->zposlabel->setText("Z: "+Z1);
+            ui->eposlabel->setText("E: "+E1);
 
           //  strList.
            // ui->label->setText(X1+Y1+Z1);
@@ -258,8 +267,10 @@ void MainWindow::serialReceived()
         //    ui->xcoord->setText(X1);
         //    ui->ycoord->setText(X1);
 
-            ui->tiptemp->setText("Curr"+T1);
-            ui->bedtemp->setText("Curr"+B1);
+            ui->tiptemp->setText(T1);
+            ui->bedtemp->setText(B1);
+             ui->tiptempslide->setValue(T1.toFloat()) ;
+              ui->bedtempslide->setValue(B1.toFloat()) ;
           //  strList.
             //ui->label->setText(X1+Y1+Z1);
         //    validm114=true;
@@ -315,12 +326,6 @@ void MainWindow::on_connectionbtn_clicked()
 
 
 //M70 P200 Message
-
-
-void MainWindow::on_pushButton_4_clicked()
-{
-
-}
 
 void MainWindow::on_pushButton_3_clicked()  // open file to listview not needed
 {
@@ -406,6 +411,7 @@ void MainWindow::on_uploadsdbtn_clicked()
         sendCommand("M23 filename.txt;"); //
 
         }
+        ui->movementbox->setTitle("Movement: Upload");
 }
 
 void MainWindow::on_uploadprintbtn_clicked()
@@ -413,6 +419,7 @@ void MainWindow::on_uploadprintbtn_clicked()
     on_uploadsdbtn_clicked();
     sendCommand("M24;"); //start printing
     sendCommand("M114;");
+     ui->movementbox->setTitle("Movement: Upload");
 }
 
 
@@ -495,13 +502,12 @@ void MainWindow::on_lineEdit_returnPressed()
 
 void MainWindow::on_timedevent(){
 //refresh
-ui->tiptempslide->setMaximum( 230) ;
- ui->tiptempslide->setRange(0,250) ;
+ //ui->tiptempslide->setMaximum( 230) ;
+ ui->tiptempslide->setRange(0,230) ;
+
  ui->bedtempslide->setMaximum( 110) ;
 
  ui->bedtempslide->setRange(0,110) ;
- ui->bedtempslide->setValue(50) ;
-  ui->tiptempslide->setValue(144) ;
 
   QString btnstatus = ui->connectionbtn->text();
   //check printer still connected
@@ -511,8 +517,9 @@ ui->tiptempslide->setMaximum( 230) ;
        ui->connectionbtn->setStyleSheet("background-color: rgb(155,255,0);");
         disconnect(serial,SIGNAL(readyRead()),this,SLOT(serialReceived()));
   }
-  else{
-    //  sendCommand("M114;");
+  else if (btnstatus.compare("Disconnect")==0 ){
+      sendCommand("M114;");
+      sendCommand("M105;");
   }
 
 
@@ -521,111 +528,156 @@ ui->tiptempslide->setMaximum( 230) ;
 void MainWindow::on_tiptempslide_valueChanged(int value)
 {
     ui->settipinput->setText( QString(ui->tiptempslide->value()) );
+     ui->movementbox->setTitle("Movement: stip");
 
 }
 
-void MainWindow::on_setTipbutton_clicked()
-{
-      //ui->tiptempslide->setValue(QString::number(ui->settipinput->text())) ;
-    sendCommand("M104 S"+QString(ui->settipinput->text()));
-}
 
 
 void MainWindow::on_em50btn_clicked()
 {
-    sendCommand("G0 E-50;");
-        sendCommand("M114;");
+    float currentpos = ui->ecoord->text().toFloat();
+    float pos=currentpos-50;
+    sendCommand("G0 E" + QString::number(pos) + ";");
+    sendCommand("M114;");
+    ui->movementbox->setTitle("Movement: sent E-50");
 }
 
 void MainWindow::on_em10btn_clicked()
 {
-     sendCommand("G0 E-10;");
-     sendCommand("M114;");
+    float currentpos = ui->ecoord->text().toFloat();
+    float pos=currentpos-10;
+    sendCommand("G0 E" + QString::number(pos) + ";");
+    sendCommand("M114;");
+    ui->movementbox->setTitle("Movement: sent E-10");
 }
 
 void MainWindow::on_em1btn_clicked()
 {
-    sendCommand("G0 E-1;");
-        sendCommand("M114;");
+    float currentpos = ui->ecoord->text().toFloat();
+    float pos=currentpos-1;
+    sendCommand("G0 E" + QString::number(pos) + ";");
+    sendCommand("M114;");
+    ui->movementbox->setTitle("Movement: sent E-1");
 }
 
 void MainWindow::on_e1btn_clicked()
 {
-     sendCommand("G0 E1;");
-         sendCommand("M114;");
+    float currentpos = ui->ecoord->text().toFloat();
+    float pos=currentpos+10;
+    sendCommand("G0 Z" + QString::number(pos) + ";");
+    sendCommand("M114;");
+    ui->movementbox->setTitle("Movement: sent E+1");
 }
 
 void MainWindow::on_e10btn_clicked()
 {
-     sendCommand("G0 E10;");
-         sendCommand("M114;");
+    float currentpos = ui->ecoord->text().toFloat();
+    float pos=currentpos+10;
+    sendCommand("G0 E" + QString::number(pos) + ";");
+    sendCommand("M114;");
+    ui->movementbox->setTitle("Movement: sent E+1");
 }
 
 void MainWindow::on_zm10_clicked()
 {
-    sendCommand("G0 Z-10;");
-        sendCommand("M114;");
+    float currentpos = ui->zcoord->text().toFloat();
+    float pos=currentpos-10;
+    sendCommand("G0 Z" + QString::number(pos) + ";");
+    sendCommand("M114;");
+    ui->movementbox->setTitle("Movement: sent Z-10");
 }
 
 void MainWindow::on_zm1btn_clicked()
 {
-    sendCommand("G0 Z-1;");
-        sendCommand("M114;");
+    float currentpos = ui->zcoord->text().toFloat();
+    float pos=currentpos-1;
+    sendCommand("G0 Z" + QString::number(pos) + ";");
+    sendCommand("M114;");
+    ui->movementbox->setTitle("Movement: sent Z-1");
 }
 
 void MainWindow::on_z1btn_clicked()
 {
-    sendCommand("G0 Z1;");
-        sendCommand("M114;");
+    float currentpos = ui->zcoord->text().toFloat();
+    float pos=currentpos+10;
+    sendCommand("G0 Z" + QString::number(pos) + ";");
+    sendCommand("M114;");
+    ui->movementbox->setTitle("Movement: sent Z+1");
+
 }
 
 void MainWindow::on_z10btn_clicked()
 {
-    sendCommand("G0 Z10;");
-        sendCommand("M114;");
+    float currentpos = ui->zcoord->text().toFloat();
+    float pos=currentpos+10;
+    sendCommand("G0 Z" + QString::number(pos) + ";");
+    sendCommand("M114;");
+    ui->movementbox->setTitle("Movement: sent Z+10");
 }
 
 void MainWindow::on_x1btn_clicked()
 {
-    sendCommand("G0 X1;");
-        sendCommand("M114;");
+    float currentpos = ui->xcoord->text().toFloat();
+    float pos=currentpos+1;
+    sendCommand("G0 X" + QString::number(pos) + ";");
+    sendCommand("M114;");
+    ui->movementbox->setTitle("Movement: sent X+1");
 }
 
 void MainWindow::on_x10btn_clicked()
 {
-        sendCommand("G0 X10;");
+    float currentpos = ui->xcoord->text().toFloat();
+    float pos=currentpos+10;
+    sendCommand("G0 X" + QString::number(pos) + ";");
+    sendCommand("M114;");
+    ui->movementbox->setTitle("Movement: sent X+10");
 }
 
 void MainWindow::on_xm1_clicked()
 {
-    sendCommand("G28 X-1;");
+    float currentpos = ui->xcoord->text().toFloat();
+    float pos=currentpos-1;
+    sendCommand("G0 X" + QString::number(pos) + ";");
+    sendCommand("M114;");
+    ui->movementbox->setTitle("Movement: sent X-1");
 }
 
 void MainWindow::on_xm10btn_clicked()
 {
-    sendCommand("G28 X-10;");
-        sendCommand("M114;");
+    float currentpos = ui->xcoord->text().toFloat();
+    float pos=currentpos-10;
+    sendCommand("G0 X" + QString::number(pos) + ";");
+    sendCommand("M114;");
+    ui->movementbox->setTitle("Movement: sent X-10");
 }
 
 void MainWindow::on_ym10btn_clicked()
 {
-    sendCommand("G28 Y-10;");
-        sendCommand("M114;");
+
+    float currentpos = ui->ycoord->text().toFloat();
+    float pos=currentpos-10;
+    sendCommand("G0 Y" + QString::number(pos) + ";");
+    sendCommand("M114;");
+    ui->movementbox->setTitle("Movement: sent y-10");
 }
 
 void MainWindow::on_ym1btn_clicked()
 {
-    sendCommand("G28 Y-1;");
+        float currentpos = ui->ycoord->text().toFloat();
+        float pos=currentpos-1;
+        sendCommand("G0 Y" + QString::number(pos) + ";");
         sendCommand("M114;");
+         ui->movementbox->setTitle("Movement: sent y-1");
 }
 
 void MainWindow::on_y1btn_clicked()
 {
     float currentpos = ui->ycoord->text().toFloat();
     float pos=currentpos+1;
-   // QString yposstr = QString::number(ypos);
-        sendCommand("G0 Y" + QString::number(pos) + ";");
-            sendCommand("M114;");
+    sendCommand("G0 Y" + QString::number(pos) + ";");
+    sendCommand("M114;");
+    ui->movementbox->setTitle("Movement: sent Y+1");
 }
 
 void MainWindow::on_y10btn_clicked()
@@ -634,61 +686,70 @@ void MainWindow::on_y10btn_clicked()
     //QString b;
    // b.setNum(ui->ycoord->text());
     float pos=currentpos+10;
-   // QString yposstr = QString::number(ypos);
         sendCommand("G0 Y" + QString::number(pos) + ";");
             sendCommand("M114;");
+            ui->movementbox->setTitle("Movement: sent Y+10");
 }
 
 void MainWindow::on_homeallbtn_clicked()
 {
     sendCommand("G28;");
     sendCommand("M114;");
+     ui->movementbox->setTitle("Movement: HomeAll");
 }
 void MainWindow::on_homexbtn_clicked()
 {
         sendCommand("G28 X0;");
         sendCommand("M114;");
+         ui->movementbox->setTitle("Movement: HomeX");
 }
 
 void MainWindow::on_homeybtn_clicked()
 {
         sendCommand("G28 Y0;");
             sendCommand("M114;");
+             ui->movementbox->setTitle("Movement: HomeY");
 }
 
 void MainWindow::on_homezbtn_clicked()
 {
         sendCommand("G28 Z0;");
             sendCommand("M114;");
+             ui->movementbox->setTitle("Movement: HomeZ");
 }
 
 void MainWindow::on_emstopbtn_clicked()
 {
   //   sendCommand("M117;");
         sendCommand("M114;");
+         ui->movementbox->setTitle("Movement: Stop");
 }
 
 void MainWindow::on_pausebtn_clicked()
 {
     sendCommand("M226;");
         sendCommand("M114;");
+         ui->movementbox->setTitle("Movement: Pause");
 }
 
 void MainWindow::on_pauseSDbtn_clicked()
 {
     sendCommand("M24;");
         sendCommand("M114;");
+          ui->movementbox->setTitle("Movement: PauseSD");
 }
 
 void MainWindow::on_pauseSDbtn_2_clicked()
 {
     sendCommand("M25;");
+      ui->movementbox->setTitle("Movement: PauseSD");
 }
 
 
 void MainWindow::on_uploadprintbtn_3_clicked()
 {
     on_uploadprintbtn_clicked();
+
 }
 
 void MainWindow::on_uploadsdbtn2_clicked()
@@ -703,5 +764,65 @@ void MainWindow::on_actionExit_triggered()
 
 void MainWindow::on_setBedbtn_clicked()
 {
+
     sendCommand("M140 S"+QString(ui->setbedinput->text()));
+      ui->movementbox->setTitle("Movement: SetBedTemp");
+
+}
+
+void MainWindow::on_setTipbutton_clicked()
+{
+      //ui->tiptempslide->setValue(QString::number(ui->settipinput->text())) ;
+    sendCommand("M104 S"+QString(ui->settipinput->text()));
+     ui->movementbox->setTitle("Movement: stip");
+}
+
+
+void MainWindow::on_comboBox_2_activated(const QString &arg1)
+{
+  //  QString value = "ON";
+  //  combo->setCurrentIndex(index);
+  //  int index = combo->findData(value);
+  //  if ( index != -1 ) { // -1 for not found
+  //     combo->setCurrentIndex(index);
+  //  }
+
+    ui->comboBox_2->setCurrentIndex(1);
+            ui->comboBox_2->setStyleSheet("background-color: red");
+}
+
+void MainWindow::on_bedpowerbtn_clicked()
+{
+     if (serial->isOpen()){
+    if (ui->bedpowerbtn->text()=="OFF"){
+
+    ui->bedpowerbtn->setText("ON");
+    ui->bedpowerbtn->setStyleSheet("background-color: rgb(155,255,0);");
+    on_setBedbtn_clicked();
+    }
+    else{
+        ui->bedpowerbtn->setText("OFF");
+        ui->setbedinput->setText("0");
+        ui->bedpowerbtn->setStyleSheet("background-color: red");
+         on_setBedbtn_clicked();
+    }
+     }
+}
+
+void MainWindow::on_tippowerbtn_clicked()
+{
+    if (serial->isOpen()){
+   if (ui->tippowerbtn->text()=="OFF"){
+
+   ui->tippowerbtn->setText("ON");
+   ui->tippowerbtn->setStyleSheet("background-color: rgb(155,255,0);");
+   on_setTipbutton_clicked();
+   }
+   else{
+       ui->tippowerbtn->setText("OFF");
+       ui->tippowerbtn->setText("0");
+       ui->tippowerbtn->setStyleSheet("background-color: red");
+        on_setTipbutton_clicked();
+   }
+    }
 }
