@@ -7,6 +7,8 @@
 #include <QTimer>
 #include <QSettings>
 
+#include "gsim/GLDrawer.h"
+
 namespace Ui {
 class MainWindow;
 }
@@ -136,6 +138,7 @@ private:
     QVector<QString > lines;
     QTimer *timer;
      QString m_settings;
+     //GLDrawer* drawer;
 };
 
 #endif // MAINWINDOW_H

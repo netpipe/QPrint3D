@@ -25,12 +25,12 @@ along with BoostComPort.  If not, see <http://www.gnu.org/licenses/>.
 
 GCodeInterpreter::GCodeInterpreter()
 {
-	
+
 }
 
 GCodeInterpreter::~GCodeInterpreter()
 {
-	
+
 }
 
 int GCodeInterpreter::open(string fileName)

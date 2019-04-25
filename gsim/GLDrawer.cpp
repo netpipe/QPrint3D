@@ -81,6 +81,7 @@ void GLDrawer::paintGL()
     float dy=(interpreter.getMaxY()+interpreter.getMinY())/2.0;
     float dz=(interpreter.getMaxZ()+interpreter.getMinZ())/2.0;
     glColor3f(1,0,0);
+    glLineWidth(2);
     glBegin(GL_LINES);
 		glVertex3f(0,0,-100);
 		glVertex3f(0,0,100);
@@ -144,6 +145,7 @@ void GLDrawer::paintGL()
     		}
     		if(hasE)
     		{
+                glLineWidth(15);
 				glBegin(GL_LINES);
 					glVertex3f(oldx, oldy, oldz);
 					glVertex3f(x, y, z);

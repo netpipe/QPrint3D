@@ -4,11 +4,13 @@
 #
 #-------------------------------------------------
 
-QT       += core gui serialport
+QT       += core gui serialport opengl
 
 RC_ICONS += ./media/QPrint3D.ico
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
+
+LIBS+=-lglut -lGL -lGLU
 
 TARGET = yk
 TEMPLATE = app
@@ -28,25 +30,15 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
         main.cpp \
         mainwindow.cpp \
-    gsim/GCodeInterpreter.cpp \
     gsim/GLDrawer.cpp \
     gsim/Helper.cpp \
-    gsim/DockLayerList.cpp \
-    gsim/DockOpenGL.cpp \
-    gsim/GCodeInterpreter.cpp \
-    gsim/GLDrawer.cpp \
-    gsim/Helper.cpp
+    gsim/GCodeInterpreter.cpp
 
 HEADERS += \
         mainwindow.h \
-    gsim/GCodeInterpreter.h \
     gsim/GLDrawer.h \
     gsim/Helper.hpp \
-    gsim/DockLayerList.h \
-    gsim/DockOpenGL.h \
     gsim/GCodeInterpreter.h \
-    gsim/GLDrawer.h \
-    gsim/Helper.hpp
 
 FORMS += \
         mainwindow.ui

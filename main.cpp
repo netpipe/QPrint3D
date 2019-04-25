@@ -3,7 +3,7 @@
 #include <QSplashScreen>
 #include <qthread.h>
 #include <QTimer>
-
+#include "gsim/Helper.hpp"
 
 class I : public QThread
 {
