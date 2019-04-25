@@ -340,7 +340,7 @@
           </widget>
          </item>
          <item row="3" column="1">
-          <widget class="QLabel" name="label_9">
+          <widget class="QLabel" name="bedtemp">
            <property name="text">
             <string>Current:</string>
            </property>
@@ -405,7 +405,7 @@
           </widget>
          </item>
          <item row="2" column="1">
-          <widget class="QLabel" name="label_8">
+          <widget class="QLabel" name="tiptemp">
            <property name="text">
             <string>Current:</string>
            </property>

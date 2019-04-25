@@ -29,7 +29,8 @@
 //launch commands list for parser
 //sdcard parser for already listed files to print sd.
 //settings need to be saved/loaded
-//need ability
+//need ability to thread the write routines it freezes whole program
+
 
 //verify successful print from sd
 //verify successful print to printer iron out buffersize to keepthings fast
@@ -205,7 +206,11 @@ void MainWindow::serialReceived()
      //  int x = QString::compare(str1, str2, Qt::CaseInsensitive);  // if strings are equal x should return 0
      //  QString data = ui->data->toPlainText();
 
-       if (datas.at(0)=="X" && datas.at(1)==":"){//todo check second char is a :
+       QString search= "X:";
+      // datas.contains(match)
+           //    if (datas.at(0)=="X" && datas.at(1)==":"){//todo check second char is a :
+
+       if ( datas.contains(search)){//todo check second char is a :
             QStringList strList = datas.split(" ");
             QString X1 = strList.value(0);
             QString Y1 = strList.value(1);
@@ -228,6 +233,39 @@ void MainWindow::serialReceived()
             validm114=true;
 
        }
+
+       search= "T:";
+       //T:12.78 / 0 B:10.75 / 0 B@:0 @:0
+       if ( datas.contains(search)){//todo check second char is a :
+            QStringList strList = datas.split(" ");
+            QString T1 = strList.value(0);
+            QString B1 = strList.value(3);
+          //  QString T2 = strList.value(2);
+
+            strList = T1.split(" ");
+            T1 = strList.value(0);
+            strList = T1.split(":");
+            T1 = strList.value(1);
+
+            strList = B1.split(" ");
+            B1 = strList.value(0);
+            qInfo() << B1;
+            strList = B1.split(":");
+            B1 = strList.value(1);
+            qInfo() << B1;
+
+
+        //    ui->xcoord->setText(X1);
+        //    ui->ycoord->setText(X1);
+
+            ui->tiptemp->setText("Curr"+T1);
+            ui->bedtemp->setText("Curr"+B1);
+          //  strList.
+            //ui->label->setText(X1+Y1+Z1);
+        //    validm114=true;
+
+       }
+
 
 }
 
@@ -257,7 +295,7 @@ void MainWindow::on_connectionbtn_clicked()
        {
             ui->connectionbtn->setText("Disconnect");
             ui->connectionbtn->setStyleSheet("background-color: red");
-         //    sendCommand("M114;");
+             sendCommand("M114;");
         }
     }else{
        // ui->label->setText("closing port");
@@ -427,10 +465,6 @@ void MainWindow::on_printbtn_2_clicked()
     on_printbtn_clicked();
 }
 
-void MainWindow::on_console_textChanged()
-{
-
-}
 
 void MainWindow::on_tiptempslide_actionTriggered(int action)
 {
@@ -486,13 +520,14 @@ ui->tiptempslide->setMaximum( 230) ;
 
 void MainWindow::on_tiptempslide_valueChanged(int value)
 {
-    ui->settipinput->setText( QString(QString::number(ui->tiptempslide->value())) );
+    ui->settipinput->setText( QString(ui->tiptempslide->value()) );
 
 }
 
 void MainWindow::on_setTipbutton_clicked()
 {
       //ui->tiptempslide->setValue(QString::number(ui->settipinput->text())) ;
+    sendCommand("M104 S"+QString(ui->settipinput->text()));
 }
 
 
@@ -664,4 +699,9 @@ void MainWindow::on_uploadsdbtn2_clicked()
 void MainWindow::on_actionExit_triggered()
 {
     QApplication::quit();
+}
+
+void MainWindow::on_setBedbtn_clicked()
+{
+    sendCommand("M140 S"+QString(ui->setbedinput->text()));
 }

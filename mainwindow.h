@@ -62,8 +62,6 @@ private slots:
 
     void on_connectionbtn_clicked();
 
-    void on_console_textChanged();
-
     void on_tiptempslide_actionTriggered(int action);
 
     void on_tiptempslide_sliderReleased();
@@ -126,6 +124,8 @@ private slots:
 
    void on_actionExit_triggered();
 
+
+   void on_setBedbtn_clicked();
 
 private:
 
