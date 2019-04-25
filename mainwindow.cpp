@@ -200,15 +200,15 @@ QString MainWindow::readData()
 void MainWindow::serialReceived()
 {
     QByteArray output;
-    output = serial->readAll();
+    output = serial->readLine();//readAll();
     //ui->label->setText("output");
    // qInfo() << output;
      //qInfo("testing");
      ui->console->append(output);
-       QString datas = output;
+       QString datas = QString(output);
 
      //  int x = QString::compare(str1, str2, Qt::CaseInsensitive);  // if strings are equal x should return 0
-   //    QString data = ui->data->toPlainText();
+     //  QString data = ui->data->toPlainText();
 
        if (datas.at(0)=="X"){
        //QStringList strList = data.split(" ");
