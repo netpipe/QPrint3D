@@ -32,7 +32,7 @@ private slots:
    // void openSerialPort();
     void closeSerialPort();
     void writeData(const QByteArray &data);
-    QString readData();
+    void readData();
 
     void serialReceived();
 
@@ -137,6 +137,7 @@ private:
     QTimer *timer;
      QString m_settings;
      GLDrawer* drawer;
+     int validm114;
 };
 
 #endif // MAINWINDOW_H

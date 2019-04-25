@@ -12,6 +12,7 @@
 
 #include <QInputDialog>
 #include <QFileDialog>
+#include<unistd.h>
 
 
 // a backup plan for talking to printer on linux would be to use the echo "G28" >> /dev/ttyACM0
@@ -160,21 +161,16 @@ void MainWindow::sendCommand(QString commandstr)
 
 void MainWindow::on_sendbtn_clicked()
 {
-   // QString command = "G28\n";
-   // ui->lineEdit->text();
     QString command = ui->lineEdit->text() + "\n"; //"G28;\n";
-   // QString command = "G28/n";
    // QString command = "M70 P200 Message\n";
     QByteArray x = command.toLocal8Bit();
 
     if (serial->isOpen() && serial->isWritable())
    {
-   // serial->write("G28;\n");
         serial->write(x);
-       ui->label->setText("sent"+ x);
+      // ui->label->setText("sent"+ x);
     }
 
-// serial->close();
 }
 
 
@@ -182,19 +178,12 @@ void MainWindow::writeData(const QByteArray &data)
 {
     serial->write(data);
 }
-//! [6]
 
-//! [7]
-QString MainWindow::readData()
+
+void MainWindow::readData()
 {
     QByteArray data = serial->readAll();
-
-    //QString data = serial->readAll();
-    //console->putData(data);
     ui->console->append(data);
-
-
-   // return data.toStdString();
 }
 
 void MainWindow::serialReceived()
@@ -211,8 +200,27 @@ void MainWindow::serialReceived()
      //  QString data = ui->data->toPlainText();
 
        if (datas.at(0)=="X"){
-       //QStringList strList = data.split(" ");
-            ui->label->setText("Got Position");
+            QStringList strList = datas.split(" "); // need to split this twice once for space then for : to get the values
+            QString X1 = strList.value(0);
+            QString Y1 = strList.value(1);
+            QString Z1 = strList.value(2);
+            QString E1 = strList.value(2);
+            strList = X1.split(":");
+            X1 = strList.value(1);
+            strList = Y1.split(":");
+            Y1 = strList.value(1);
+            strList = Z1.split(":");
+            Z1 = strList.value(1);
+            strList = E1.split(":");
+            E1 = strList.value(1);
+            ui->xcoord->setText(X1);
+            ui->ycoord->setText(X1);
+            ui->zcoord->setText(X1);
+
+          //  strList.
+           // ui->label->setText(X1+Y1+Z1);
+            validm114=true;
+
        }
 
 }
@@ -255,6 +263,7 @@ void MainWindow::on_connectionbtn_clicked()
 
     }
     //check if printer in ascii mode by lookikng for checksum error ?
+        sendCommand("M114;");
 }
 
 
@@ -331,42 +340,32 @@ void MainWindow::on_opengcodebtn_clicked() // lineedit
 
 void MainWindow::on_uploadsdbtn_clicked()
 {
-        if (0){
-      sendCommand("M21;"); // get sdcard ready
-      sendCommand("M28 filename.txt;"); //write to file
+        QString text3 = QInputDialog::getText(this,"Pick Filename to save","gcode");
 
-      // send code here
-      sendCommand("M29;"); //stop writing
-    }
+        QString text = ui->textBrowser->toPlainText();
+        QTextStream * stream2 = new QTextStream(&text , QIODevice::ReadOnly);
+
+        if (0){
+
+        sendCommand("M21;"); // get sdcard ready
+        sendCommand("M28 "+text3); //write to file
+
+        while (!stream2->atEnd()) {
+            sendCommand(stream2->readLine());
+            sleep(10);
+        }
+        // send code here
+        sendCommand("M29;"); //stop writing
+        sendCommand("M23 filename.txt;"); //
+
+        }
 }
 
 void MainWindow::on_uploadprintbtn_clicked()
 {
-    //pick filename
-    QString text3 = QInputDialog::getText(this,"Pick Filename to save","gcode");
-   // QString fileName = QFileDialog::getOpenFileName(this,
-   //      tr("Open GCode"), "/home", tr("GCode Files (*.gcode)"));
-   // ui->fileName->setText(fileName);
-
-    //check if printer connected
-
-    QString text = ui->textBrowser->toPlainText();
-    QTextStream * stream2 = new QTextStream(&text , QIODevice::ReadOnly);
-
-        //if text3 != "" then continue
-    if (0){
-
-    sendCommand("M21;"); // get sdcard ready
-    sendCommand("M28 "+text3); //write to file
-
-    while (!stream2->atEnd()) {
-        sendCommand(stream2->readLine());
-    }
-    // send code here
-    sendCommand("M29;"); //stop writing
-    sendCommand("M23 filename.txt;"); //
+    on_uploadsdbtn_clicked();
     sendCommand("M24;"); //start printing
-    }
+    sendCommand("M114;");
 }
 
 
@@ -395,15 +394,12 @@ void MainWindow::on_printbtn_clicked()
        {
          //   << stream2->readLine();
        //update progress bar / tip position
-
+        //on_timedevent();
        //wait for receive position
-        //mark receivedm114 reset
-     //  QString position = readData();
 
-       //parse position for validm114
-        int validm114=0;
+       validm114=1; // everything should be homed maybe do a 0,0,0 check unless resuming
         int printbuffersize=10;
-        //wait for valid m114 before doing more
+
        while (validm114) { //or specified time
        //    for (int i=1;10,i++;){
           // QString currentline = lines[1].toStdString();
@@ -415,7 +411,7 @@ void MainWindow::on_printbtn_clicked()
          if (count >= printbuffersize){ validm114=0; count++;}; //send m114 every buffer length to see where its at
         }
         sendCommand("M114;");
-        validm114=1;  //parse and wait for valid before sending more
+     //   validm114=1;  //parse and wait for valid before sending more
         count=0;
 
        }
@@ -476,6 +472,9 @@ ui->tiptempslide->setMaximum( 230) ;
       ui->connectionbtn->setText("Reconnect");
        ui->connectionbtn->setStyleSheet("background-color: rgb(155,255,0);");
   }
+  else{
+    //  sendCommand("M114;");
+  }
 
 
 }
@@ -495,51 +494,61 @@ void MainWindow::on_setTipbutton_clicked()
 void MainWindow::on_em50btn_clicked()
 {
     sendCommand("G0 E-50;");
+        sendCommand("M114;");
 }
 
 void MainWindow::on_em10btn_clicked()
 {
      sendCommand("G0 E-10;");
+     sendCommand("M114;");
 }
 
 void MainWindow::on_em1btn_clicked()
 {
     sendCommand("G0 E-1;");
+        sendCommand("M114;");
 }
 
 void MainWindow::on_e1btn_clicked()
 {
      sendCommand("G0 E1;");
+         sendCommand("M114;");
 }
 
 void MainWindow::on_e10btn_clicked()
 {
      sendCommand("G0 E10;");
+         sendCommand("M114;");
 }
 
 void MainWindow::on_zm10_clicked()
 {
     sendCommand("G0 Z-10;");
+        sendCommand("M114;");
 }
 
 void MainWindow::on_zm1btn_clicked()
 {
     sendCommand("G0 Z-1;");
+        sendCommand("M114;");
 }
 
 void MainWindow::on_z1btn_clicked()
 {
     sendCommand("G0 Z1;");
+        sendCommand("M114;");
 }
 
 void MainWindow::on_z10btn_clicked()
 {
     sendCommand("G0 Z10;");
+        sendCommand("M114;");
 }
 
 void MainWindow::on_x1btn_clicked()
 {
     sendCommand("G0 X1;");
+        sendCommand("M114;");
 }
 
 void MainWindow::on_x10btn_clicked()
@@ -555,16 +564,19 @@ void MainWindow::on_xm1_clicked()
 void MainWindow::on_xm10btn_clicked()
 {
     sendCommand("G28 X-10;");
+        sendCommand("M114;");
 }
 
 void MainWindow::on_ym10btn_clicked()
 {
     sendCommand("G28 Y-10;");
+        sendCommand("M114;");
 }
 
 void MainWindow::on_ym1btn_clicked()
 {
     sendCommand("G28 Y-1;");
+        sendCommand("M114;");
 }
 
 void MainWindow::on_y1btn_clicked()
@@ -573,6 +585,7 @@ void MainWindow::on_y1btn_clicked()
     float pos=currentpos+1;
    // QString yposstr = QString::number(ypos);
         sendCommand("G0 Y" + QString::number(pos) + ";");
+            sendCommand("M114;");
 }
 
 void MainWindow::on_y10btn_clicked()
@@ -583,40 +596,48 @@ void MainWindow::on_y10btn_clicked()
     float pos=currentpos+10;
    // QString yposstr = QString::number(ypos);
         sendCommand("G0 Y" + QString::number(pos) + ";");
+            sendCommand("M114;");
 }
 
 void MainWindow::on_homeallbtn_clicked()
 {
     sendCommand("G28;");
+    sendCommand("M114;");
 }
 void MainWindow::on_homexbtn_clicked()
 {
         sendCommand("G28 X0;");
+        sendCommand("M114;");
 }
 
 void MainWindow::on_homeybtn_clicked()
 {
         sendCommand("G28 Y0;");
+            sendCommand("M114;");
 }
 
 void MainWindow::on_homezbtn_clicked()
 {
         sendCommand("G28 Z0;");
+            sendCommand("M114;");
 }
 
 void MainWindow::on_emstopbtn_clicked()
 {
   //   sendCommand("M117;");
+        sendCommand("M114;");
 }
 
 void MainWindow::on_pausebtn_clicked()
 {
     sendCommand("M226;");
+        sendCommand("M114;");
 }
 
 void MainWindow::on_pauseSDbtn_clicked()
 {
     sendCommand("M24;");
+        sendCommand("M114;");
 }
 
 void MainWindow::on_pauseSDbtn_2_clicked()
