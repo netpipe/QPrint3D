@@ -9,6 +9,7 @@
 #include <QPixmap>
 #include <QFile>
 #include <QTextStream>
+#include <QThread>
 
 #include <QInputDialog>
 #include <QFileDialog>
@@ -35,6 +36,20 @@
 
 //verify successful print from sd
 //verify successful print to printer iron out buffersize to keepthings fast
+
+class MyThread : public QThread
+{
+    Q_OBJECT
+
+protected:
+    void run();
+};
+
+void MyThread::run()
+{
+
+}
+
 
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -78,6 +93,12 @@ MainWindow::MainWindow(QWidget *parent) :
     format.setStencilBufferSize(8);
     format.setVersion(3, 2);
     ui->widget->setFormat(format);
+
+    QPalette palette = ui->printTabs->palette();
+  //  palette.setColor(ui->mprintbox->backgroundRole(), Qt::yellow);
+    palette.setColor(ui->printTabs->foregroundRole(), Qt::yellow);
+    ui->printTabs->setPalette(palette);
+
 
     msgBox("For Testing Purposes, its not ready unless you know how to code try in a month");
 

@@ -13,6 +13,9 @@
   <property name="windowTitle">
    <string>QPrint3D</string>
   </property>
+  <property name="styleSheet">
+   <string notr="true">background-color: rgba(126,126,126,255);color: rgba(255, 255,255, 255) ;</string>
+  </property>
   <widget class="QWidget" name="centralWidget">
    <layout class="QGridLayout" name="gridLayout">
     <item row="1" column="0">
@@ -24,13 +27,13 @@
        </sizepolicy>
       </property>
       <property name="styleSheet">
-       <string notr="true">background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1,   stop:0 rgba(160, 126,155, 55), stop:1 rgba(198, 211, 62, 55))</string>
+       <string notr="true">background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1,   stop:0 rgba(220, 226,222, 55), stop:1 rgba(198, 211, 62, 55));color: rgba(0, 0,0, 255) ;</string>
       </property>
       <property name="tabShape">
        <enum>QTabWidget::Triangular</enum>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="tab">
        <attribute name="title">
