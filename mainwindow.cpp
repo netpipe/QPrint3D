@@ -9,11 +9,13 @@
 #include <QPixmap>
 #include <QFile>
 #include <QTextStream>
-#include <QThread>
 
 #include <QInputDialog>
 #include <QFileDialog>
-#include<unistd.h>
+#include <QTimer>
+#include <QSettings>
+
+//#include<unistd.h>
 
 
 // a backup plan for talking to printer on linux would be to use the echo "G28" >> /dev/ttyACM0
@@ -28,28 +30,9 @@
 //movement buttons need current position to move around better
 //keyboard jog mode
 //launch commands list for parser
-//sdcard parser for already listed files to print sd.
-//settings need to be saved/loaded
-//need ability to thread the write routines it freezes whole program
-//combine pause resume button for sd print
-
 
 //verify successful print from sd
 //verify successful print to printer iron out buffersize to keepthings fast
-
-class MyThread : public QThread
-{
-    Q_OBJECT
-
-protected:
-    void run();
-};
-
-void MyThread::run()
-{
-
-}
-
 
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -59,23 +42,36 @@ MainWindow::MainWindow(QWidget *parent) :
 
     this->setWindowTitle("QPrint3d");
 
-    serial = new QSerialPort(this);
+    //serial = new QSerialPort(this);
+    m_pSerial = new SerialThread(this);
+    connect(m_pSerial, &SerialThread::conected, this, &MainWindow::onSerialPortConnected);
+    connect(m_pSerial, &SerialThread::responseRecieved, this, &MainWindow::onSerialPortResponseRecieved);
+    connect(m_pSerial, &SerialThread::error, this, &MainWindow::onSerialPortError);
+    connect(m_pSerial, &SerialThread::timeout, this, &MainWindow::onSerialPortTimeout);
+
 //! [1]
   //  settings = new SettingsDialog;
 
-    connect(serial, SIGNAL(error(QSerialPort::SerialPortError)), this,
-            SLOT(handleError(QSerialPort::SerialPortError)));
+   // connect(serial, SIGNAL(error(QSerialPort::SerialPortError)), this,
+    //        SLOT(handleError(QSerialPort::SerialPortError)));
 
-    timer = new QTimer(this);
-    connect(timer, SIGNAL(timeout()),
-          this, SLOT(on_timedevent()));
-
-    timer->start(10000);
-
+    //connect(serial, SIGNAL(readyRead()), this, SLOT(readData()));
+    //connect(console, SIGNAL(getData(QByteArray)), this, SLOT(writeData(QByteArray)))
 
 
     ui->setupUi(this);
+
     ui->emstopbtn->setStyleSheet("background-color: red");
+
+    timer = new QTimer(this);
+
+    // setup signal and slot
+    connect(timer, SIGNAL(timeout()),
+          this, SLOT(on_timedevent()));
+
+    // msec
+    timer->start(1000);
+
 
 
   //  this->setWindowOpacity(0.55);
@@ -87,31 +83,17 @@ MainWindow::MainWindow(QWidget *parent) :
     loadSettings();
 
   //  QOpenGLWidget *widget = new QOpenGLWidget();
-    drawer = new GLDrawer(ui->widget);
-    QSurfaceFormat format;
+    //QWidget* tab_11 = ui->tab_11;
+    /*drawer = new GLWidget(ui->tab_11);
+    drawer->setGeometry(20, 10, 611, 341);
+    QGLFormat format;
     format.setDepthBufferSize(24);
     format.setStencilBufferSize(8);
     format.setVersion(3, 2);
-    ui->widget->setFormat(format);
-
-    QPalette palette = ui->printTabs->palette();
-  //  palette.setColor(ui->mprintbox->backgroundRole(), Qt::yellow);
-    palette.setColor(ui->printTabs->foregroundRole(), Qt::yellow);
-    ui->printTabs->setPalette(palette);
-
+    drawer->setFormat(format);*/
+    //ui->widget->setFormat(format);
 
     msgBox("For Testing Purposes, its not ready unless you know how to code try in a month");
-
-    ui->statusbox->setTitle("Status: .");
-    ui->mprintbox->setTitle("PrintBox: connection");
-
-  //   qInfo() << args.value(1);
-}
-
-void MainWindow::passargs(QString args){
-
-    arg= args;
-    qInfo() << arg;
 }
 
 void MainWindow::loadSettings()
@@ -124,6 +106,7 @@ void MainWindow::loadSettings()
 // }
 }
 
+
 void MainWindow::saveSettings()
 {
  QSettings settings(m_settings, QSettings::NativeFormat);
@@ -133,25 +116,6 @@ void MainWindow::saveSettings()
  //{
  // ui->label->setText(sText);
  //}
-}
-
-
-void MainWindow::closeSerialPort()
-{
-    serial->close();
-//    console->setEnabled(false);
-  //  ui->actionConnect->setEnabled(true);
- //   ui->actionDisconnect->setEnabled(false);
-  //  ui->actionConfigure->setEnabled(true);
-   // ui->statusBar->showMessage(tr("Disconnected"));
-}
-
-void MainWindow::handleError(QSerialPort::SerialPortError error)
-{
-    if (error == QSerialPort::ResourceError) {
-        QMessageBox::critical(this, tr("Critical Error"), serial->errorString());
-        closeSerialPort();
-    }
 }
 
 
@@ -178,10 +142,10 @@ void MainWindow::sendCommand(QString commandstr)
    // QString command = "M70 P200 Message\n";
     QByteArray x = command.toLocal8Bit();
 
-    if (serial->isOpen() && serial->isWritable())
+    if (m_pSerial->isConnected())
    {
    // serial->write("G28;\n");
-        serial->write(x);
+        m_pSerial->transaction(commandstr);
        ui->label->setText("sent");
     }
     else {
@@ -197,16 +161,16 @@ void MainWindow::on_sendbtn_clicked()
    // QString command = "M70 P200 Message\n";
     QByteArray x = command.toLocal8Bit();
 
-    if (serial->isOpen() && serial->isWritable())
+    if (m_pSerial->isConnected())
    {
-        serial->write(x);
+        m_pSerial->transaction(command);
       // ui->label->setText("sent"+ x);
     }
 
 }
 
 
-void MainWindow::writeData(const QByteArray &data)
+/*void MainWindow::writeData(const QByteArray &data)
 {
     serial->write(data);
 }
@@ -216,27 +180,20 @@ void MainWindow::readData()
 {
     QByteArray data = serial->readAll();
     ui->console->append(data);
+}*/
+
+void MainWindow::onSerialPortTimeout(){
+
 }
 
-void MainWindow::serialReceived()
-{
-    QByteArray output;
-    output = serial->readLine();//readAll();
-    //ui->label->setText("output");
-   // qInfo() << output;
-     //qInfo("testing");
-     ui->console->append(output);
-       QString datas = QString(output);
+void MainWindow::onSerialPortResponseRecieved(const QString &response) {
+     ui->console->append(response);
 
      //  int x = QString::compare(str1, str2, Qt::CaseInsensitive);  // if strings are equal x should return 0
      //  QString data = ui->data->toPlainText();
 
-       QString search= "X:";
-      // datas.contains(match)
-           //    if (datas.at(0)=="X" && datas.at(1)==":"){//todo check second char is a :
-
-       if ( datas.contains(search)){//todo check second char is a :
-            QStringList strList = datas.split(" ");
+       if (response.at(0)=="X" && response.at(1)==":"){//todo check second char is a :
+            QStringList strList = response.split(" ");
             QString X1 = strList.value(0);
             QString Y1 = strList.value(1);
             QString Z1 = strList.value(2);
@@ -250,13 +207,8 @@ void MainWindow::serialReceived()
             strList = E1.split(":");
             E1 = strList.value(1);
             ui->xcoord->setText(X1);
-            ui->ycoord->setText(Y1);
-            ui->zcoord->setText(Z1);
-
-            ui->xposlabel->setText("X: "+X1);
-            ui->yposlabel->setText("Y: "+Y1);
-            ui->zposlabel->setText("Z: "+Z1);
-            ui->eposlabel->setText("E: "+E1);
+            ui->ycoord->setText(X1);
+            ui->zcoord->setText(X1);
 
           //  strList.
            // ui->label->setText(X1+Y1+Z1);
@@ -264,44 +216,24 @@ void MainWindow::serialReceived()
 
        }
 
-       search= "T:";
-       //T:12.78 / 0 B:10.75 / 0 B@:0 @:0
-       if ( datas.contains(search)){//todo check second char is a :
-            QStringList strList = datas.split(" ");
-            QString T1 = strList.value(0);
-            QString B1 = strList.value(3);
-          //  QString T2 = strList.value(2);
-
-            strList = T1.split(" ");
-            T1 = strList.value(0);
-            strList = T1.split(":");
-            T1 = strList.value(1);
-
-            strList = B1.split(" ");
-            B1 = strList.value(0);
-            qInfo() << B1;
-            strList = B1.split(":");
-            B1 = strList.value(1);
-            qInfo() << B1;
-
-
-        //    ui->xcoord->setText(X1);
-        //    ui->ycoord->setText(X1);
-
-            ui->tiptemp->setText(T1);
-            ui->bedtemp->setText(B1);
-             ui->tiptempslide->setValue(T1.toFloat()) ;
-              ui->bedtempslide->setValue(B1.toFloat()) ;
-          //  strList.
-            //ui->label->setText(X1+Y1+Z1);
-        //    validm114=true;
-
-       }
-
-
 }
 
+void MainWindow::onSerialPortError(QSerialPort::SerialPortError error) {
+    if(error == QSerialPort::OpenError){
+        ui->label->setText("Error: Failed to connect");
+    }
+    if (error == QSerialPort::ResourceError) {
+        QMessageBox::critical(this, tr("Critical Error"), m_pSerial->serialPortErrorString());
+        m_pSerial->disconnectPort();
+    }
+}
 
+void MainWindow::onSerialPortConnected(){
+    ui->label->setText("Connected to Printer!!");
+
+    ui->connectionbtn->setText("Disconnect");
+    ui->connectionbtn->setStyleSheet("background-color: red");
+}
 
 void MainWindow::on_connectionbtn_clicked()
 {
@@ -309,37 +241,13 @@ void MainWindow::on_connectionbtn_clicked()
     ui->label->setText(btnstatus);
     //if (btnstatus.toStdString().c_str() == "Connect"){
     if (btnstatus.compare("Connect")==0){
-        serial->setPortName(ui->portBox->currentText());
-          connect(serial,SIGNAL(readyRead()),this,SLOT(serialReceived()));
+        m_pSerial->connectToPort(ui->portBox->currentText());
       // serial->setPortName(QString('/dev/ttyACM0'));
-        serial->setBaudRate(115200);
-        serial->setDataBits(QSerialPort::Data8);
-        serial->setParity(QSerialPort::NoParity);
-        serial->setStopBits(QSerialPort::OneStop);;
-        serial->setFlowControl(QSerialPort::NoFlowControl);
-        if (serial->open(QIODevice::ReadWrite)) {
-           ui->label->setText("Connected to Printer!!");
-        } else {
-            ui->label->setText("Error: Failed to connect");
-        }
-
-        if (serial->isOpen() && serial->isWritable())
-       {
-            ui->connectionbtn->setText("Disconnect");
-            ui->connectionbtn->setStyleSheet("background-color: red");
-             sendCommand("M114;");
-        }
     }else{
        // ui->label->setText("closing port");
-        closeSerialPort();
-        if (!serial->isOpen())
-        {
-            ui->connectionbtn->setText("Connect");
-             ui->connectionbtn->setStyleSheet("background-color: rgb(155,255,0);");
-             serial->clear();
-             disconnect(serial,SIGNAL(readyRead()),this,SLOT(serialReceived()));
-        }
-
+       m_pSerial->disconnectPort();
+        ui->connectionbtn->setText("Connect");
+        ui->connectionbtn->setStyleSheet("background-color: rgb(155,255,0);");
     }
     //check if printer in ascii mode by lookikng for checksum error ?
 
@@ -347,6 +255,12 @@ void MainWindow::on_connectionbtn_clicked()
 
 
 //M70 P200 Message
+
+
+void MainWindow::on_pushButton_4_clicked()
+{
+
+}
 
 void MainWindow::on_pushButton_3_clicked()  // open file to listview not needed
 {
@@ -407,7 +321,15 @@ void MainWindow::on_opengcodebtn_clicked() // lineedit
     this->setWindowTitle("QPrint3d "+fileName);
  //   ui->filenamelabel->setText(fileName);
 
-   drawer->loadGCode(fileName.toStdString());
+   ui->widget->loadGCode(fileName);
+   connect(ui->widget, &GLWidget::layerMinMaxChanged, this, &MainWindow::onLayerMinMaxChanged);
+
+}
+
+void MainWindow::onLayerMinMaxChanged(int min, int max){
+   ui->verticalSlider->setMinimum(min);
+   ui->verticalSlider->setMaximum(max);
+   ui->verticalSlider->setValue(min);
 
 }
 
@@ -425,14 +347,13 @@ void MainWindow::on_uploadsdbtn_clicked()
 
         while (!stream2->atEnd()) {
             sendCommand(stream2->readLine());
-            sleep(10);
+            //sleep(10);
         }
         // send code here
         sendCommand("M29;"); //stop writing
         sendCommand("M23 filename.txt;"); //
 
         }
-        ui->movementbox->setTitle("Movement: Upload");
 }
 
 void MainWindow::on_uploadprintbtn_clicked()
@@ -440,7 +361,6 @@ void MainWindow::on_uploadprintbtn_clicked()
     on_uploadsdbtn_clicked();
     sendCommand("M24;"); //start printing
     sendCommand("M114;");
-     ui->movementbox->setTitle("Movement: Upload");
 }
 
 
@@ -493,6 +413,10 @@ void MainWindow::on_printbtn_2_clicked()
     on_printbtn_clicked();
 }
 
+void MainWindow::on_console_textChanged()
+{
+
+}
 
 void MainWindow::on_tiptempslide_actionTriggered(int action)
 {
@@ -523,24 +447,23 @@ void MainWindow::on_lineEdit_returnPressed()
 
 void MainWindow::on_timedevent(){
 //refresh
- //ui->tiptempslide->setMaximum( 230) ;
- ui->tiptempslide->setRange(0,230) ;
-
+ui->tiptempslide->setMaximum( 230) ;
+ ui->tiptempslide->setRange(0,250) ;
  ui->bedtempslide->setMaximum( 110) ;
 
  ui->bedtempslide->setRange(0,110) ;
+ ui->bedtempslide->setValue(50) ;
+  ui->tiptempslide->setValue(144) ;
 
   QString btnstatus = ui->connectionbtn->text();
   //check printer still connected
-  if (!serial->isOpen() && !btnstatus.compare("Disconnect"))
+  if (!m_pSerial->isConnected() && !btnstatus.compare("Disconnect"))
   {
       ui->connectionbtn->setText("Reconnect");
        ui->connectionbtn->setStyleSheet("background-color: rgb(155,255,0);");
-        disconnect(serial,SIGNAL(readyRead()),this,SLOT(serialReceived()));
   }
-  else if (btnstatus.compare("Disconnect")==0 ){
-      sendCommand("M114;");
-      sendCommand("M105;");
+  else{
+    //  sendCommand("M114;");
   }
 
 
@@ -548,157 +471,111 @@ void MainWindow::on_timedevent(){
 
 void MainWindow::on_tiptempslide_valueChanged(int value)
 {
-    ui->settipinput->setText( QString(ui->tiptempslide->value()) );
-     ui->movementbox->setTitle("Movement: stip");
+    ui->settipinput->setText( QString(QString::number(ui->tiptempslide->value())) );
 
 }
 
+void MainWindow::on_setTipbutton_clicked()
+{
+      //ui->tiptempslide->setValue(QString::number(ui->settipinput->text())) ;
+}
 
 
 void MainWindow::on_em50btn_clicked()
 {
-    float currentpos = ui->ecoord->text().toFloat();
-    float pos=currentpos-50;
-    sendCommand("G0 E" + QString::number(pos) + ";");
-    sendCommand("M114;");
-    ui->movementbox->setTitle("Movement: sent E-50");
+    sendCommand("G0 E-50;");
+        sendCommand("M114;");
 }
 
 void MainWindow::on_em10btn_clicked()
 {
-    float currentpos = ui->ecoord->text().toFloat();
-    float pos=currentpos-10;
-    sendCommand("G0 E" + QString::number(pos) + ";");
-    sendCommand("M114;");
-    ui->movementbox->setTitle("Movement: sent E-10");
+     sendCommand("G0 E-10;");
+     sendCommand("M114;");
 }
 
 void MainWindow::on_em1btn_clicked()
 {
-    float currentpos = ui->ecoord->text().toFloat();
-    float pos=currentpos-1;
-    sendCommand("G0 E" + QString::number(pos) + ";");
-    sendCommand("M114;");
-    ui->movementbox->setTitle("Movement: sent E-1");
+    sendCommand("G0 E-1;");
+        sendCommand("M114;");
 }
 
 void MainWindow::on_e1btn_clicked()
 {
-    float currentpos = ui->ecoord->text().toFloat();
-    float pos=currentpos+10;
-    sendCommand("G0 Z" + QString::number(pos) + ";");
-    sendCommand("M114;");
-    ui->movementbox->setTitle("Movement: sent E+1");
+     sendCommand("G0 E1;");
+         sendCommand("M114;");
 }
 
 void MainWindow::on_e10btn_clicked()
 {
-    float currentpos = ui->ecoord->text().toFloat();
-    float pos=currentpos+10;
-    sendCommand("G0 E" + QString::number(pos) + ";");
-    sendCommand("M114;");
-    ui->movementbox->setTitle("Movement: sent E+1");
+     sendCommand("G0 E10;");
+         sendCommand("M114;");
 }
 
 void MainWindow::on_zm10_clicked()
 {
-    float currentpos = ui->zcoord->text().toFloat();
-    float pos=currentpos-10;
-    sendCommand("G0 Z" + QString::number(pos) + ";");
-    sendCommand("M114;");
-    ui->movementbox->setTitle("Movement: sent Z-10");
+    sendCommand("G0 Z-10;");
+        sendCommand("M114;");
 }
 
 void MainWindow::on_zm1btn_clicked()
 {
-    float currentpos = ui->zcoord->text().toFloat();
-    float pos=currentpos-1;
-    sendCommand("G0 Z" + QString::number(pos) + ";");
-    sendCommand("M114;");
-    ui->movementbox->setTitle("Movement: sent Z-1");
+    sendCommand("G0 Z-1;");
+        sendCommand("M114;");
 }
 
 void MainWindow::on_z1btn_clicked()
 {
-    float currentpos = ui->zcoord->text().toFloat();
-    float pos=currentpos+10;
-    sendCommand("G0 Z" + QString::number(pos) + ";");
-    sendCommand("M114;");
-    ui->movementbox->setTitle("Movement: sent Z+1");
-
+    sendCommand("G0 Z1;");
+        sendCommand("M114;");
 }
 
 void MainWindow::on_z10btn_clicked()
 {
-    float currentpos = ui->zcoord->text().toFloat();
-    float pos=currentpos+10;
-    sendCommand("G0 Z" + QString::number(pos) + ";");
-    sendCommand("M114;");
-    ui->movementbox->setTitle("Movement: sent Z+10");
+    sendCommand("G0 Z10;");
+        sendCommand("M114;");
 }
 
 void MainWindow::on_x1btn_clicked()
 {
-    float currentpos = ui->xcoord->text().toFloat();
-    float pos=currentpos+1;
-    sendCommand("G0 X" + QString::number(pos) + ";");
-    sendCommand("M114;");
-    ui->movementbox->setTitle("Movement: sent X+1");
+    sendCommand("G0 X1;");
+        sendCommand("M114;");
 }
 
 void MainWindow::on_x10btn_clicked()
 {
-    float currentpos = ui->xcoord->text().toFloat();
-    float pos=currentpos+10;
-    sendCommand("G0 X" + QString::number(pos) + ";");
-    sendCommand("M114;");
-    ui->movementbox->setTitle("Movement: sent X+10");
+        sendCommand("G0 X10;");
 }
 
 void MainWindow::on_xm1_clicked()
 {
-    float currentpos = ui->xcoord->text().toFloat();
-    float pos=currentpos-1;
-    sendCommand("G0 X" + QString::number(pos) + ";");
-    sendCommand("M114;");
-    ui->movementbox->setTitle("Movement: sent X-1");
+    sendCommand("G28 X-1;");
 }
 
 void MainWindow::on_xm10btn_clicked()
 {
-    float currentpos = ui->xcoord->text().toFloat();
-    float pos=currentpos-10;
-    sendCommand("G0 X" + QString::number(pos) + ";");
-    sendCommand("M114;");
-    ui->movementbox->setTitle("Movement: sent X-10");
+    sendCommand("G28 X-10;");
+        sendCommand("M114;");
 }
 
 void MainWindow::on_ym10btn_clicked()
 {
-
-    float currentpos = ui->ycoord->text().toFloat();
-    float pos=currentpos-10;
-    sendCommand("G0 Y" + QString::number(pos) + ";");
-    sendCommand("M114;");
-    ui->movementbox->setTitle("Movement: sent y-10");
+    sendCommand("G28 Y-10;");
+        sendCommand("M114;");
 }
 
 void MainWindow::on_ym1btn_clicked()
 {
-        float currentpos = ui->ycoord->text().toFloat();
-        float pos=currentpos-1;
-        sendCommand("G0 Y" + QString::number(pos) + ";");
+    sendCommand("G28 Y-1;");
         sendCommand("M114;");
-         ui->movementbox->setTitle("Movement: sent y-1");
 }
 
 void MainWindow::on_y1btn_clicked()
 {
     float currentpos = ui->ycoord->text().toFloat();
     float pos=currentpos+1;
-    sendCommand("G0 Y" + QString::number(pos) + ";");
-    sendCommand("M114;");
-    ui->movementbox->setTitle("Movement: sent Y+1");
+   // QString yposstr = QString::number(ypos);
+        sendCommand("G0 Y" + QString::number(pos) + ";");
+            sendCommand("M114;");
 }
 
 void MainWindow::on_y10btn_clicked()
@@ -707,70 +584,61 @@ void MainWindow::on_y10btn_clicked()
     //QString b;
    // b.setNum(ui->ycoord->text());
     float pos=currentpos+10;
+   // QString yposstr = QString::number(ypos);
         sendCommand("G0 Y" + QString::number(pos) + ";");
             sendCommand("M114;");
-            ui->movementbox->setTitle("Movement: sent Y+10");
 }
 
 void MainWindow::on_homeallbtn_clicked()
 {
     sendCommand("G28;");
     sendCommand("M114;");
-     ui->movementbox->setTitle("Movement: HomeAll");
 }
 void MainWindow::on_homexbtn_clicked()
 {
         sendCommand("G28 X0;");
         sendCommand("M114;");
-         ui->movementbox->setTitle("Movement: HomeX");
 }
 
 void MainWindow::on_homeybtn_clicked()
 {
         sendCommand("G28 Y0;");
             sendCommand("M114;");
-             ui->movementbox->setTitle("Movement: HomeY");
 }
 
 void MainWindow::on_homezbtn_clicked()
 {
         sendCommand("G28 Z0;");
             sendCommand("M114;");
-             ui->movementbox->setTitle("Movement: HomeZ");
 }
 
 void MainWindow::on_emstopbtn_clicked()
 {
   //   sendCommand("M117;");
         sendCommand("M114;");
-         ui->movementbox->setTitle("Movement: Stop");
 }
 
 void MainWindow::on_pausebtn_clicked()
 {
     sendCommand("M226;");
         sendCommand("M114;");
-         ui->movementbox->setTitle("Movement: Pause");
 }
 
 void MainWindow::on_pauseSDbtn_clicked()
 {
     sendCommand("M24;");
         sendCommand("M114;");
-          ui->movementbox->setTitle("Movement: PauseSD");
 }
 
 void MainWindow::on_pauseSDbtn_2_clicked()
 {
     sendCommand("M25;");
-      ui->movementbox->setTitle("Movement: PauseSD");
 }
 
 
 void MainWindow::on_uploadprintbtn_3_clicked()
 {
     on_uploadprintbtn_clicked();
-
 }
 
 void MainWindow::on_uploadsdbtn2_clicked()
@@ -783,67 +651,8 @@ void MainWindow::on_actionExit_triggered()
     QApplication::quit();
 }
 
-void MainWindow::on_setBedbtn_clicked()
+void MainWindow::on_verticalSlider_valueChanged(int value)
 {
-
-    sendCommand("M140 S"+QString(ui->setbedinput->text()));
-      ui->movementbox->setTitle("Movement: SetBedTemp");
-
-}
-
-void MainWindow::on_setTipbutton_clicked()
-{
-      //ui->tiptempslide->setValue(QString::number(ui->settipinput->text())) ;
-    sendCommand("M104 S"+QString(ui->settipinput->text()));
-     ui->movementbox->setTitle("Movement: stip");
-}
-
-
-void MainWindow::on_comboBox_2_activated(const QString &arg1)
-{
-  //  QString value = "ON";
-  //  combo->setCurrentIndex(index);
-  //  int index = combo->findData(value);
-  //  if ( index != -1 ) { // -1 for not found
-  //     combo->setCurrentIndex(index);
-  //  }
-
-    ui->comboBox_2->setCurrentIndex(1);
-            ui->comboBox_2->setStyleSheet("background-color: red");
-}
-
-void MainWindow::on_bedpowerbtn_clicked()
-{
-     if (serial->isOpen()){
-    if (ui->bedpowerbtn->text()=="OFF"){
-
-    ui->bedpowerbtn->setText("ON");
-    ui->bedpowerbtn->setStyleSheet("background-color: rgb(155,255,0);");
-    on_setBedbtn_clicked();
-    }
-    else{
-        ui->bedpowerbtn->setText("OFF");
-        ui->setbedinput->setText("0");
-        ui->bedpowerbtn->setStyleSheet("background-color: red");
-         on_setBedbtn_clicked();
-    }
-     }
-}
-
-void MainWindow::on_tippowerbtn_clicked()
-{
-    if (serial->isOpen()){
-   if (ui->tippowerbtn->text()=="OFF"){
-
-   ui->tippowerbtn->setText("ON");
-   ui->tippowerbtn->setStyleSheet("background-color: rgb(155,255,0);");
-   on_setTipbutton_clicked();
-   }
-   else{
-       ui->tippowerbtn->setText("OFF");
-       ui->tippowerbtn->setText("0");
-       ui->tippowerbtn->setStyleSheet("background-color: red");
-        on_setTipbutton_clicked();
-   }
-    }
+    ui->widget->setLayer(value);
+    qDebug() << "Slider Value changed" << value;
 }
