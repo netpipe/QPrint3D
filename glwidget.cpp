@@ -362,7 +362,7 @@ void GLWidget::mouseReleaseEvent(QMouseEvent* event)
     //cout<<"Mouse released"<<endl;
     if(event->button()==Qt::LeftButton)
         leftMousePressed=false;
-    else if(event->button()==Qt::MidButton)
+    else if(event->button()==Qt::MiddleButton)
         midMousePressed=false;
     else if(event->button()==Qt::RightButton)
         rightMousePressed=false;
@@ -373,7 +373,7 @@ void GLWidget::mousePressEvent(QMouseEvent* event) {
     lastMousePosition=event->pos();
     if(event->button()==Qt::LeftButton)
         leftMousePressed=true;
-    else if(event->button()==Qt::MidButton)
+    else if(event->button()==Qt::MiddleButton)
         midMousePressed=true;
     else if(event->button()==Qt::RightButton)
         rightMousePressed=true;
@@ -399,7 +399,7 @@ void GLWidget::mouseMoveEvent(QMouseEvent* event) {
 
 void GLWidget::wheelEvent(QWheelEvent* event)
 {
-    transZ+=event->delta()/10.0;
+ //  transZ+=event->delta()/10.0;
     //cout<<"transZ: "<<transZ<<endl;
     update();
 }

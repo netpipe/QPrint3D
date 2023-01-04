@@ -4,10 +4,9 @@
 #
 #-------------------------------------------------
 
-QT       += core gui serialport opengl
+QT       += core gui serialport  opengl openglwidgets
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
-
 TARGET = QPrint3dNew
 TEMPLATE = app
 

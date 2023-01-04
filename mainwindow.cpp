@@ -192,29 +192,29 @@ void MainWindow::onSerialPortResponseRecieved(const QString &response) {
      //  int x = QString::compare(str1, str2, Qt::CaseInsensitive);  // if strings are equal x should return 0
      //  QString data = ui->data->toPlainText();
 
-       if (response.at(0)=="X" && response.at(1)==":"){//todo check second char is a :
-            QStringList strList = response.split(" ");
-            QString X1 = strList.value(0);
-            QString Y1 = strList.value(1);
-            QString Z1 = strList.value(2);
-            QString E1 = strList.value(2);
-            strList = X1.split(":");
-            X1 = strList.value(1);
-            strList = Y1.split(":");
-            Y1 = strList.value(1);
-            strList = Z1.split(":");
-            Z1 = strList.value(1);
-            strList = E1.split(":");
-            E1 = strList.value(1);
-            ui->xcoord->setText(X1);
-            ui->ycoord->setText(X1);
-            ui->zcoord->setText(X1);
+//       if (response.at(0)=="X" && response.at(1)==":"){//todo check second char is a :
+//            QStringList strList = response.split(" ");
+//            QString X1 = strList.value(0);
+//            QString Y1 = strList.value(1);
+//            QString Z1 = strList.value(2);
+//            QString E1 = strList.value(2);
+//            strList = X1.split(":");
+//            X1 = strList.value(1);
+//            strList = Y1.split(":");
+//            Y1 = strList.value(1);
+//            strList = Z1.split(":");
+//            Z1 = strList.value(1);
+//            strList = E1.split(":");
+//            E1 = strList.value(1);
+//            ui->xcoord->setText(X1);
+//            ui->ycoord->setText(X1);
+//            ui->zcoord->setText(X1);
 
-          //  strList.
-           // ui->label->setText(X1+Y1+Z1);
-            validm114=true;
+//          //  strList.
+//           // ui->label->setText(X1+Y1+Z1);
+//            validm114=true;
 
-       }
+//       }
 
 }
 

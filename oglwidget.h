@@ -1,6 +1,7 @@
 #ifndef OGLWIDGET_H
 #define OGLWIDGET_H
-#include <QOpenGLWidget>
+#include <QtOpenGLWidgets/QOpenGLWidget>
+
 #include <QOpenGLFunctions>
 #include <QOpenGLBuffer>
 
