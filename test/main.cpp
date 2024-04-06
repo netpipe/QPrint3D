@@ -15,7 +15,7 @@
 class SerialThread : public QThread {
     Q_OBJECT
 public:
-    explicit SerialThread(QObject *parent = nullptr) : QThread(parent), m_Quit(false) {}
+    explicit SerialThread() : QThread(), m_Quit(false) {}
     ~SerialThread() {
         mutex.lock();
         cond.wakeOne();
@@ -30,6 +30,11 @@ public:
         m_PortName = portName;
         m_Port.setPortName(portName);
         m_Port.setBaudRate(QSerialPort::Baud115200);
+         m_Port.setDataBits(QSerialPort::Data8);
+         m_Port.setParity(QSerialPort::NoParity);
+         m_Port.setStopBits(QSerialPort::OneStop);
+         m_Port.setFlowControl(QSerialPort::NoFlowControl);
+
         if (m_Port.open(QIODevice::ReadWrite)) {
             emit connected();
         } else {
