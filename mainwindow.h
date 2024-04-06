@@ -39,7 +39,7 @@ private slots:
     void writeData(const QByteArray &data);
     void readData();
     void onLayerMinMaxChanged(int min, int max);
-    //void serialReceived();
+    void serialReceived();
 
     void on_xm1_clicked();
 

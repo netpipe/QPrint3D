@@ -5,10 +5,14 @@
 #-------------------------------------------------
 
 QT       += core gui serialport  opengl
-QMAKE_CXX               = /usr/bin/g++
+#if windows include openglwidgets
+
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = QPrint3dNew
 TEMPLATE = app
+
+#if linux and qt6
+QMAKE_CXX               = /usr/bin/g++
 
 #CONFIG += c++17
 # The following define makes your compiler emit warnings if you use
@@ -42,4 +46,3 @@ FORMS += \
     mainwindow.ui
 
 RESOURCES += \
-    textures.qrc

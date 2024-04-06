@@ -54,7 +54,7 @@ MainWindow::MainWindow(QWidget *parent) :
     serial = new QSerialPort(this);
     connect(serial, SIGNAL(error(QSerialPort::SerialPortError)), this,
             SLOT(handleError(QSerialPort::SerialPortError)));
-        connect(serial, SIGNAL(readyRead()), this, SLOT(readData()));
+       // connect(serial, SIGNAL(readyRead()), this, SLOT(readData()));
 
 
     ui->setupUi(this);
@@ -213,6 +213,112 @@ void MainWindow::onSerialPortTimeout(){
 
 }
 
+
+void MainWindow::serialReceived()
+{
+    QByteArray output;
+
+
+
+    while (serial->bytesAvailable() > 0) {
+         output = serial->readLine();//readAll();
+        QByteArray newData = output;
+        buffer.append(newData);
+
+        // Process complete lines
+        while (buffer.contains('\n')) {
+            int newlineIndex = buffer.indexOf('\n');
+            QByteArray line = buffer.left(newlineIndex + 1); // Include the newline character
+            buffer.remove(0, newlineIndex + 1); // Remove the processed line from the buffer
+
+            // Handle the complete line (e.g., print it)
+            qDebug() << "Received line:" << line;
+             ui->console->append("UART:" + line);
+            // You can emit a signal with the line if needed
+            // emit lineReceived(line);
+        }
+    }
+
+
+    //ui->label->setText("output");
+   // qInfo() << output;
+     //qInfo("testing");
+   //  ui->console->append(output);
+       QString datas = QString(output);
+
+     //  int x = QString::compare(str1, str2, Qt::CaseInsensitive);  // if strings are equal x should return 0
+     //  QString data = ui->data->toPlainText();
+
+       QString search= "X:";
+      // datas.contains(match)
+           //    if (datas.at(0)=="X" && datas.at(1)==":"){//todo check second char is a :
+
+       if ( datas.contains(search)){//todo check second char is a :
+            QStringList strList = datas.split(" ");
+            QString X1 = strList.value(0);
+            QString Y1 = strList.value(1);
+            QString Z1 = strList.value(2);
+            QString E1 = strList.value(2);
+            strList = X1.split(":");
+            X1 = strList.value(1);
+            strList = Y1.split(":");
+            Y1 = strList.value(1);
+            strList = Z1.split(":");
+            Z1 = strList.value(1);
+            strList = E1.split(":");
+            E1 = strList.value(1);
+            ui->xcoord->setText(X1);
+            ui->ycoord->setText(Y1);
+            ui->zcoord->setText(Z1);
+
+            ui->xposlabel->setText("X: "+X1);
+            ui->yposlabel->setText("Y: "+Y1);
+            ui->zposlabel->setText("Z: "+Z1);
+            ui->eposlabel->setText("E: "+E1);
+
+          //  strList.
+           // ui->label->setText(X1+Y1+Z1);
+            validm114=true;
+
+       }
+
+       search= "T:";
+       //T:12.78 / 0 B:10.75 / 0 B@:0 @:0
+       if ( datas.contains(search)){//todo check second char is a :
+            QStringList strList = datas.split(" ");
+            QString T1 = strList.value(0);
+            QString B1 = strList.value(3);
+          //  QString T2 = strList.value(2);
+
+            strList = T1.split(" ");
+            T1 = strList.value(0);
+            strList = T1.split(":");
+            T1 = strList.value(1);
+
+            strList = B1.split(" ");
+            B1 = strList.value(0);
+            qInfo() << B1;
+            strList = B1.split(":");
+            B1 = strList.value(1);
+            qInfo() << B1;
+
+
+        //    ui->xcoord->setText(X1);
+        //    ui->ycoord->setText(X1);
+
+            ui->tiptemp->setText(T1);
+            ui->bedtemp->setText(B1);
+             ui->tiptempslide->setValue(T1.toFloat()) ;
+              ui->bedtempslide->setValue(B1.toFloat()) ;
+          //  strList.
+            //ui->label->setText(X1+Y1+Z1);
+        //    validm114=true;
+
+       }
+
+
+}
+
 void MainWindow::onSerialPortResponseRecieved(const QString &response) {
      ui->console->append(response);
 
@@ -269,7 +375,7 @@ void MainWindow::on_connectionbtn_clicked()
     //if (btnstatus.toStdString().c_str() == "Connect"){
     if (btnstatus.compare("Connect")==0){
         serial->setPortName(ui->portBox->currentText());
-         // connect(serial,SIGNAL(readyRead()),this,SLOT(serialReceived()));
+          connect(serial,SIGNAL(readyRead()),this,SLOT(serialReceived()));
       // serial->setPortName(QString('/dev/ttyACM0'));
         serial->setBaudRate(115200);
         serial->setDataBits(QSerialPort::Data8);
