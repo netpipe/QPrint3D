@@ -146,6 +146,7 @@ private:
      QString m_settings;
      GLWidget* drawer;
      int validm114;
+      QByteArray buffer;
 };
 
 #endif // MAINWINDOW_H
