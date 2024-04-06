@@ -43,19 +43,19 @@ MainWindow::MainWindow(QWidget *parent) :
     this->setWindowTitle("QPrint3d");
 
     //serial = new QSerialPort(this);
-//    m_pSerial = new SerialThread(this);
-//    connect(m_pSerial, &SerialThread::conected, this, &MainWindow::onSerialPortConnected);
-//    connect(m_pSerial, &SerialThread::responseRecieved, this, &MainWindow::onSerialPortResponseRecieved);
-//    connect(m_pSerial, &SerialThread::error, this, &MainWindow::onSerialPortError);
-//    connect(m_pSerial, &SerialThread::timeout, this, &MainWindow::onSerialPortTimeout);
+    m_pSerial = new SerialThread(this);
+    connect(m_pSerial, &SerialThread::conected, this, &MainWindow::onSerialPortConnected);
+    connect(m_pSerial, &SerialThread::responseRecieved, this, &MainWindow::onSerialPortResponseRecieved);
+    connect(m_pSerial, &SerialThread::error, this, &MainWindow::onSerialPortError);
+    connect(m_pSerial, &SerialThread::timeout, this, &MainWindow::onSerialPortTimeout);
 
 //! [1]
   //  settings = new SettingsDialog;
 
-    connect(serial, SIGNAL(error(QSerialPort::SerialPortError)), this,
-            SLOT(handleError(QSerialPort::SerialPortError)));
+   // connect(serial, SIGNAL(error(QSerialPort::SerialPortError)), this,
+    //        SLOT(handleError(QSerialPort::SerialPortError)));
 
-    connect(serial, SIGNAL(readyRead()), this, SLOT(readData()));
+   // connect(serial, SIGNAL(readyRead()), this, SLOT(readData()));
     //connect(console, SIGNAL(getData(QByteArray)), this, SLOT(writeData(QByteArray)))
 
 
@@ -169,7 +169,7 @@ void MainWindow::on_sendbtn_clicked()
 
 }
 
-
+/*
 void MainWindow::writeData(const QByteArray &data)
 {
     serial->write(data);
@@ -180,7 +180,7 @@ void MainWindow::readData()
 {
     QByteArray data = serial->readAll();
     ui->console->append(data);
-}
+}*/
 
 void MainWindow::onSerialPortTimeout(){
 
