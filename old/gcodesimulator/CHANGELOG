@@ -1,0 +1,14 @@
+Version    Release Date       Description
+0.1        01.12.2010         Initial Release
+0.1.1      02.12.2010         Bug fix:  * Wrong saving of coordinates as integer cased 
+                                          a very ugly object
+                              Features: * Open the program with a G-Code as parameter
+                                          and it will open it at startup
+0.1.2      07.12.2010         Features: * List of layers, these laysers are _NOT_ the layers
+                                          numbers the printer will print. So layer 0 is
+                                          not the first layer he will print. It is just a
+                                          help for making some things invisible.
+                                        * The program got a menu where all actions are listet,
+                                          The button "Open G-Code" was removed.
+                                        * The menu has buttons to show and hide the dock windows
+
