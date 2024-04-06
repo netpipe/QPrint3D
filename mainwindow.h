@@ -29,15 +29,15 @@ public:
 private slots:
     void onSerialPortConnected();
     void onSerialPortResponseRecieved(const QString& response);
-    void onSerialPortError(QSerialPort::SerialPortError error);
+  //  void onSerialPortError(QSerialPort::SerialPortError error);
     void onSerialPortTimeout();
 
 private slots:
-    //void handleError(QSerialPort::SerialPortError error);
+    void handleError(QSerialPort::SerialPortError error);
    // void openSerialPort();
     //void closeSerialPort();
-    //void writeData(const QByteArray &data);
-    //void readData();
+    void writeData(const QByteArray &data);
+    void readData();
     void onLayerMinMaxChanged(int min, int max);
     //void serialReceived();
 
@@ -138,8 +138,8 @@ private slots:
 private:
 
     Ui::MainWindow *ui;
-    //QSerialPort *serial;
-    SerialThread* m_pSerial;
+    QSerialPort *serial;
+    //SerialThread* m_pSerial;
     QStringListModel *model;
     QVector<QString > lines;
     QTimer *timer;

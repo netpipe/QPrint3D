@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui serialport  opengl openglwidgets
+QT       += core gui serialport  opengl
 QMAKE_CXX               = /usr/bin/g++
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = QPrint3dNew

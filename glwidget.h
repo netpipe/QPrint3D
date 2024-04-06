@@ -51,7 +51,7 @@
 #ifndef GLWIDGET_H
 #define GLWIDGET_H
 
-#include <QtOpenGLWidgets/QOpenGLWidget>
+#include <QOpenGLWidget>
 
 #include <QOpenGLFunctions>
 #include <QOpenGLBuffer>

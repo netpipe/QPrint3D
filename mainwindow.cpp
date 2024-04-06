@@ -42,21 +42,19 @@ MainWindow::MainWindow(QWidget *parent) :
 
     this->setWindowTitle("QPrint3d");
 
-    //serial = new QSerialPort(this);
-    m_pSerial = new SerialThread(this);
-    connect(m_pSerial, &SerialThread::conected, this, &MainWindow::onSerialPortConnected);
-    connect(m_pSerial, &SerialThread::responseRecieved, this, &MainWindow::onSerialPortResponseRecieved);
-    connect(m_pSerial, &SerialThread::error, this, &MainWindow::onSerialPortError);
-    connect(m_pSerial, &SerialThread::timeout, this, &MainWindow::onSerialPortTimeout);
+
+//    m_pSerial = new SerialThread(this);
+//    connect(m_pSerial, &SerialThread::conected, this, &MainWindow::onSerialPortConnected);
+//    connect(m_pSerial, &SerialThread::responseRecieved, this, &MainWindow::onSerialPortResponseRecieved);
+//    connect(m_pSerial, &SerialThread::error, this, &MainWindow::onSerialPortError);
+//    connect(m_pSerial, &SerialThread::timeout, this, &MainWindow::onSerialPortTimeout);
 
 //! [1]
   //  settings = new SettingsDialog;
-
-   // connect(serial, SIGNAL(error(QSerialPort::SerialPortError)), this,
-    //        SLOT(handleError(QSerialPort::SerialPortError)));
-
-   // connect(serial, SIGNAL(readyRead()), this, SLOT(readData()));
-    //connect(console, SIGNAL(getData(QByteArray)), this, SLOT(writeData(QByteArray)))
+    serial = new QSerialPort(this);
+    connect(serial, SIGNAL(error(QSerialPort::SerialPortError)), this,
+            SLOT(handleError(QSerialPort::SerialPortError)));
+        connect(serial, SIGNAL(readyRead()), this, SLOT(readData()));
 
 
     ui->setupUi(this);
@@ -94,6 +92,14 @@ MainWindow::MainWindow(QWidget *parent) :
     //ui->widget->setFormat(format);
 
     msgBox("For Testing Purposes, its not ready unless you know how to code try in a month");
+}
+
+void MainWindow::handleError(QSerialPort::SerialPortError error)
+{
+    if (error == QSerialPort::ResourceError) {
+        QMessageBox::critical(this, tr("Critical Error"), serial->errorString());
+        serial->close();
+    }
 }
 
 void MainWindow::loadSettings()
@@ -142,10 +148,11 @@ void MainWindow::sendCommand(QString commandstr)
    // QString command = "M70 P200 Message\n";
     QByteArray x = command.toLocal8Bit();
 
-    if (m_pSerial->isConnected())
+    if (serial->isOpen() && serial->isWritable())
    {
    // serial->write("G28;\n");
-        m_pSerial->transaction(commandstr);
+        serial->write(x);
+       // serial->transaction(commandstr);
        ui->label->setText("sent");
     }
     else {
@@ -161,15 +168,16 @@ void MainWindow::on_sendbtn_clicked()
    // QString command = "M70 P200 Message\n";
     QByteArray x = command.toLocal8Bit();
 
-    if (m_pSerial->isConnected())
+    if (serial->isOpen() && serial->isWritable())
    {
-        m_pSerial->transaction(command);
-      // ui->label->setText("sent"+ x);
+    //    serial->transaction(command);
+            serial->write(x);
+       ui->label->setText("sent"+ x);
     }
 
 }
 
-/*
+
 void MainWindow::writeData(const QByteArray &data)
 {
     serial->write(data);
@@ -178,9 +186,28 @@ void MainWindow::writeData(const QByteArray &data)
 
 void MainWindow::readData()
 {
-    QByteArray data = serial->readAll();
-    ui->console->append(data);
-}*/
+  //  QByteArray data = serial->readAll();
+  //  ui->console->append(data);
+    while (serial->bytesAvailable() > 0) {
+        QByteArray newData = serial->readAll();
+        buffer.append(newData);
+
+        // Process complete lines
+        while (buffer.contains('\n')) {
+            int newlineIndex = buffer.indexOf('\n');
+            QByteArray line = buffer.left(newlineIndex + 1); // Include the newline character
+            buffer.remove(0, newlineIndex + 1); // Remove the processed line from the buffer
+
+            // Handle the complete line (e.g., print it)
+            qDebug() << "Received line:" << line;
+             ui->console->append("UART:" + line);
+            // You can emit a signal with the line if needed
+            // emit lineReceived(line);
+        }
+    }
+
+
+}
 
 void MainWindow::onSerialPortTimeout(){
 
@@ -218,15 +245,15 @@ void MainWindow::onSerialPortResponseRecieved(const QString &response) {
 
 }
 
-void MainWindow::onSerialPortError(QSerialPort::SerialPortError error) {
-    if(error == QSerialPort::OpenError){
-        ui->label->setText("Error: Failed to connect");
-    }
-    if (error == QSerialPort::ResourceError) {
-        QMessageBox::critical(this, tr("Critical Error"), m_pSerial->serialPortErrorString());
-        m_pSerial->disconnectPort();
-    }
-}
+//void MainWindow::onSerialPortError(QSerialPort::SerialPortError error) {
+//    if(error == QSerialPort::OpenError){
+//        ui->label->setText("Error: Failed to connect");
+//    }
+//    if (error == QSerialPort::ResourceError) {
+//        QMessageBox::critical(this, tr("Critical Error"), m_pSerial->serialPortErrorString());
+//        m_pSerial->disconnectPort();
+//    }
+//}
 
 void MainWindow::onSerialPortConnected(){
     ui->label->setText("Connected to Printer!!");
@@ -241,13 +268,38 @@ void MainWindow::on_connectionbtn_clicked()
     ui->label->setText(btnstatus);
     //if (btnstatus.toStdString().c_str() == "Connect"){
     if (btnstatus.compare("Connect")==0){
-        m_pSerial->connectToPort(ui->portBox->currentText());
+        serial->setPortName(ui->portBox->currentText());
+         // connect(serial,SIGNAL(readyRead()),this,SLOT(serialReceived()));
       // serial->setPortName(QString('/dev/ttyACM0'));
+        serial->setBaudRate(115200);
+        serial->setDataBits(QSerialPort::Data8);
+        serial->setParity(QSerialPort::NoParity);
+        serial->setStopBits(QSerialPort::OneStop);;
+        serial->setFlowControl(QSerialPort::NoFlowControl);
+        if (serial->open(QIODevice::ReadWrite)) {
+           ui->label->setText("Connected to Printer!!");
+        } else {
+            ui->label->setText("Error: Failed to connect");
+        }
+
+        if (serial->isOpen() && serial->isWritable())
+       {
+            ui->connectionbtn->setText("Disconnect");
+            ui->connectionbtn->setStyleSheet("background-color: red");
+        //     sendCommand("M114;");
+        }
     }else{
        // ui->label->setText("closing port");
-       m_pSerial->disconnectPort();
-        ui->connectionbtn->setText("Connect");
-        ui->connectionbtn->setStyleSheet("background-color: rgb(155,255,0);");
+        //closeSerialPort();
+        serial->close();
+        if (!serial->isOpen())
+        {
+            ui->connectionbtn->setText("Connect");
+             ui->connectionbtn->setStyleSheet("background-color: rgb(155,255,0);");
+             serial->clear();
+             disconnect(serial,SIGNAL(readyRead()),this,SLOT(serialReceived()));
+        }
+
     }
     //check if printer in ascii mode by lookikng for checksum error ?
 
@@ -457,13 +509,15 @@ ui->tiptempslide->setMaximum( 230) ;
 
   QString btnstatus = ui->connectionbtn->text();
   //check printer still connected
-  if (!m_pSerial->isConnected() && !btnstatus.compare("Disconnect"))
+  if (!serial->isOpen() && !btnstatus.compare("Disconnect"))
   {
       ui->connectionbtn->setText("Reconnect");
        ui->connectionbtn->setStyleSheet("background-color: rgb(155,255,0);");
+        disconnect(serial,SIGNAL(readyRead()),this,SLOT(serialReceived()));
   }
-  else{
+  else if (btnstatus.compare("Disconnect")==0 ){
     //  sendCommand("M114;");
+    //  sendCommand("M105;");
   }
 
 
